@@ -1,0 +1,9 @@
+{
+  "name": "TradeMate — Foreign Trade Email Assistant",
+  "short_name": "TradeMate",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafbfc",
+  "theme_color": "#5b5be0",
+  "icons": []
+}

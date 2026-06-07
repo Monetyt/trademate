@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TradeMate</title>
+<style>
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+}
+
+[data-theme="light"] {
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #0d0d1a;
+  --text2: #5a5a72;
+  --text3: #9494a8;
+  --border: #e8e8f0;
+  --accent: #5b5be0;
+  --accent-light: #f0f0ff;
+  --accent-glow: rgba(91,91,224,0.15);
+  --gradient-1: #5b5be0;
+  --gradient-2: #8b5cf6;
+  --gradient-3: #3b82f6;
+  --input-bg: #f8f9fc;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+  --shadow-hover: 0 2px 6px rgba(0,0,0,0.06), 0 12px 36px rgba(0,0,0,0.06);
+  --shadow-btn: 0 4px 14px rgba(91,91,224,0.3);
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a14;
+  --card-bg: #13132a;
+  --text: #e8e8f0;
+  --text2: #9090a8;
+  --text3: #606078;
+  --border: #1e1e38;
+  --accent: #7b7bff;
+  --accent-light: rgba(123,123,255,0.08);
+  --accent-glow: rgba(123,123,255,0.2);
+  --gradient-1: #7b7bff;
+  --gradient-2: #a78bfa;
+  --gradient-3: #60a5fa;
+  --input-bg: #0e0e24;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.2);
+  --shadow-hover: 0 2px 6px rgba(0,0,0,0.3), 0 12px 36px rgba(0,0,0,0.3);
+  --shadow-btn: 0 4px 14px rgba(123,123,255,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font); background: var(--bg); color: var(--text);
+  line-height: 1.5; min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -20%, var(--accent-glow), transparent),
+    radial-gradient(ellipse 40% 50% at 80% 80%, rgba(139,92,246,0.06), transparent);
+  background-attachment: fixed;
+}
+
+/* ====== TOP NAV ====== */
+.topnav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px; position: sticky; top: 0; z-index: 10;
+  backdrop-filter: blur(12px); background: rgba(250,251,252,0.7);
+  border-bottom: 1px solid var(--border);
+}
+[data-theme="dark"] .topnav { background: rgba(10,10,20,0.7); }
+
+.topnav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 16px; font-weight: 700; letter-spacing: -0.3px;
+}
+.topnav-brand .logo {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 700;
+  box-shadow: 0 2px 8px rgba(91,91,224,0.3);
+}
+
+.topnav-actions { display: flex; align-items: center; gap: 10px; }
+
+/* ====== MAIN LAYOUT ====== */
+.page { max-width: 960px; margin: 0 auto; padding: 40px 32px 80px; }
+
+/* Hero */
+.hero { text-align: center; margin-bottom: 40px; }
+.hero h1 { font-size: 32px; font-weight: 750; letter-spacing: -0.8px; background: linear-gradient(135deg, var(--gradient-1), var(--gradient-3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.hero p { font-size: 15px; color: var(--text2); max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+/* Type selector — horizontal scrollable pills */
+.type-strip {
+  display: flex; gap: 8px; margin-bottom: 32px; overflow-x: auto;
+  padding: 4px 0; -webkit-overflow-scrolling: touch; justify-content: center;
+}
+.type-pill {
+  padding: 8px 18px; border-radius: 24px; font-size: 13px; font-weight: 480;
+  white-space: nowrap; cursor: pointer; transition: all 0.15s;
+  border: 1px solid var(--border); background: var(--card-bg); color: var(--text2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.type-pill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+.type-pill.active { background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2)); color: #fff; border-color: transparent; font-weight: 550; box-shadow: var(--shadow-btn); }
+
+/* Two-column workspace */
+.workspace { display: grid; grid-template-columns: 1fr; gap: 22px; }
+
+/* Card */
+.card {
+  background: var(--card-bg); border-radius: 16px; padding: 28px;
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+.card-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text3); margin-bottom: 16px;
+}
+
+/* Input */
+textarea {
+  width: 100%; min-height: 240px; padding: 16px; border: 1px solid var(--border);
+  border-radius: 12px; font-family: var(--font); font-size: 13px; line-height: 1.7;
+  color: var(--text); background: var(--input-bg); resize: vertical;
+  transition: all 0.2s;
+}
+textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
+textarea::placeholder { color: var(--text3); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 28px; border: none; border-radius: 12px;
+  font-family: var(--font); font-size: 14px; font-weight: 580; cursor: pointer;
+  transition: all 0.15s; letter-spacing: -0.2px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+  color: #fff; width: 100%; box-shadow: var(--shadow-btn);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(91,91,224,0.4); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-ghost {
+  background: transparent; color: var(--text2); font-size: 12px; padding: 6px 12px;
+  border-radius: 8px;
+}
+.btn-ghost:hover { background: var(--input-bg); color: var(--text); }
+.btn-sm { padding: 8px 18px; font-size: 13px; }
+
+/* Result */
+.result-panel {
+  min-height: 300px; padding: 28px; background: var(--input-bg);
+  border-radius: 12px; font-size: 13px; line-height: 1.75; color: var(--text);
+}
+.result-panel .analysis-box {
+  padding: 12px 16px; background: var(--accent-light); border-radius: 10px;
+  margin-bottom: 20px; font-size: 12px; color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+.result-panel .section-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text3); margin: 16px 0 4px;
+}
+.result-panel p { margin-bottom: 8px; }
+
+/* Stage indicator */
+.stages { display: flex; gap: 14px; margin-bottom: 28px; justify-content: center; }
+.stage { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text3); }
+.stage .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.stage.active .dot { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.stage.active { color: var(--accent); font-weight: 500; }
+.stage.done .dot { background: #10b981; }
+.stage-line { width: 24px; height: 1px; background: var(--border); margin: 0 4px; }
+
+/* History */
+.history { margin-top: 40px; }
+.history h3 { font-size: 15px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.2px; }
+.history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.history-card {
+  padding: 16px; background: var(--card-bg); border-radius: 12px;
+  border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+.history-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.history-card .hc-type { font-size: 11px; color: var(--accent); font-weight: 550; margin-bottom: 4px; }
+.history-card .hc-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-card .hc-meta { font-size: 11px; color: var(--text3); }
+
+/* ====== MODAL ====== */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(6px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card-bg); border-radius: 16px; width: 500px; max-height: 80vh;
+  overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); padding: 28px;
+}
+.modal h3 { font-size: 16px; font-weight: 650; margin-bottom: 18px; letter-spacing: -0.3px; }
+.modal label { display: block; font-size: 11px; font-weight: 550; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+.modal input, .modal select {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  font-family: var(--font); font-size: 13px; margin-bottom: 14px;
+  background: var(--input-bg); color: var(--text);
+}
+.modal input:focus, .modal select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.modal .row { display: flex; gap: 12px; }
+.modal .row > * { flex: 1; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+
+/* Lang popover */
+.lang-wrap { position: relative; }
+.lang-btn {
+  padding: 7px 15px; border: 1px solid var(--border); border-radius: 22px;
+  font-size: 12px; cursor: pointer; background: var(--card-bg); color: var(--text2);
+  font-weight: 450; transition: all 0.12s;
+}
+.lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+.popover {
+  display: none; position: absolute; top: 100%; right: 0; margin-top: 6px;
+  background: var(--card-bg); border-radius: 14px; box-shadow: var(--shadow-hover);
+  border: 1px solid var(--border); padding: 14px; width: 300px; z-index: 50;
+}
+.popover.show { display: block; }
+.popover input {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; margin-bottom: 8px; background: var(--input-bg); color: var(--text);
+  font-family: var(--font);
+}
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; max-height: 200px; overflow-y: auto; }
+.lang-opt { padding: 7px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text2); transition: background 0.1s; }
+.lang-opt:hover { background: var(--input-bg); }
+.lang-opt.sel { background: var(--accent-light); color: var(--accent); font-weight: 500; }
+
+/* Theme toggle */
+.theme-dot {
+  width: 34px; height: 34px; border-radius: 17px; border: 1px solid var(--border);
+  background: var(--card-bg); cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.theme-dot:hover { border-color: var(--accent); background: var(--input-bg); }
+
+/* Responsive */
+@media (max-width: 800px) {
+  .workspace { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 24px; }
+  .type-strip { justify-content: flex-start; }
+}
+
+.text-muted { font-size: 11px; color: var(--text3); }
+.mt-8 { margin-top: 8px; }
+.mb-16 { margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ====== TOP NAV ====== -->
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="logo">T</div>
+    TradeMate
+  </div>
+  <div class="topnav-actions">
+    <div class="lang-wrap">
+      <button class="lang-btn" onclick="toggleLang()">🌐 <span id="langCount">20</span> languages</button>
+      <div class="popover" id="langPopover">
+        <input placeholder="Search…" oninput="filterLang(this.value)">
+        <div class="lang-grid" id="langGrid"></div>
+      </div>
+    </div>
+    <button class="theme-dot" onclick="toggleTheme()" id="themeBtn">☀</button>
+    <button class="btn btn-ghost" onclick="openSettings()" style="font-size:13px;">⚙ Settings</button>
+  </div>
+</nav>
+
+<!-- ====== PAGE ====== -->
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Write better replies. Close more deals.</h1>
+    <p>AI-powered email assistant built for foreign trade. Paste a buyer inquiry, get a professional reply with negotiation strategy — in seconds.</p>
+  </div>
+
+  <!-- Workflow indicator -->
+  <div class="stages">
+    <span class="stage active"><span class="dot"></span> Paste Inquiry</span>
+    <span class="stage-line"></span>
+    <span class="stage"><span class="dot"></span> AI Analyzes</span>
+    <span class="stage-line"></span>
+    <span class="stage"><span class="dot"></span> Get Reply</span>
+  </div>
+
+  <!-- Type selector -->
+  <div class="type-strip">
+    <span class="type-pill active">Inquiry Reply</span>
+    <span class="type-pill">WhatsApp</span>
+    <span class="type-pill">Quote Follow-up</span>
+    <span class="type-pill">After-sales</span>
+    <span class="type-pill">Cold Email</span>
+    <span class="type-pill">Exhibition</span>
+    <span class="type-pill">Confirmation</span>
+    <span class="type-pill">Shipping</span>
+    <span class="type-pill">Payment</span>
+    <span class="type-pill">Greeting</span>
+  </div>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <!-- Left: Input -->
+    <div>
+      <div class="card">
+        <div class="card-label">Buyer's Message</div>
+        <textarea placeholder="Paste the inquiry email or WhatsApp message here…
+
+Subject: Inquiry about Bluetooth Door Lock
+Hello, I came across your product on Alibaba…"></textarea>
+      </div>
+      <button class="btn btn-primary mt-8" style="margin-top:16px;">
+        Generate Response <span style="opacity:0.5;font-size:12px;">⌘ ↵</span>
+      </button>
+    </div>
+
+    <!-- Right: Result -->
+    <div>
+      <div class="card">
+        <div class="card-label">Generated Reply</div>
+        <div class="result-panel">
+          <div class="analysis-box">
+            <strong>Analysis</strong> — Spanish distributor. Professional, strong intent. Real concern: EU compliance + private label capability. $32 pricing healthy. Recommend leading with CE certification.
+          </div>
+          <p class="section-label">Subject</p>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Re: Inquiry about Bluetooth Door Lock — BL-200 Details, EU Certs & Private Label</p>
+          <p>Hi Carlos,</p>
+          <p>Thank you for the detailed inquiry — SmartLiving Distribution sounds like the perfect fit for our BL-200 series.</p>
+          <p><strong>MOQ & Pricing</strong> — 100 units standard. For 200–300 trial: <strong>$32/unit</strong> FOB Shenzhen. At 5,000+ annually: $28–30.</p>
+          <p><strong>Bluetooth</strong> — iOS 13+ & Android 8+. App in EN/ES/DE/FR/IT.</p>
+          <p><strong>EU Certifications</strong> — CE, FCC, RoHS. We've been exporting to Germany for 5+ years with zero compliance issues.</p>
+          <p><strong>Private Label</strong> — Custom branding, app startup screen, packaging. Min 200 units — your trial order already qualifies.</p>
+          <p><strong>Next step</strong> — Would a video call this week work? Happy to walk you through our production line. Available Tue–Thu Beijing time.</p>
+          <p>Best regards,<br>[Your Name] · Shenzhen SecuTech Co., Ltd.</p>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-ghost">📋 Copy</button>
+          <button class="btn btn-ghost">⭐ Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history">
+    <h3>Recent</h3>
+    <div class="history-grid">
+      <div class="history-card"><div class="hc-type">Inquiry Reply</div><div class="hc-title">Re: BL-200 Inquiry — Carlos Mendez</div><div class="hc-meta">2 min ago · EN</div></div>
+      <div class="history-card"><div class="hc-type">WhatsApp</div><div class="hc-title">BL-200 price check — quick reply</div><div class="hc-meta">1 hr ago · ES</div></div>
+      <div class="history-card"><div class="hc-type">Cold Email</div><div class="hc-title">Smart home distributors — Germany outreach</div><div class="hc-meta">Yesterday · DE</div></div>
+      <div class="history-card"><div class="hc-type">Payment Reminder</div><div class="hc-title">Invoice INV-0520 follow-up</div><div class="hc-meta">2 days ago · EN</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL ====== -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h3>Product Settings</h3>
+    <label>Industry Template</label>
+    <select><option value="">Choose to auto-fill…</option>
+      <optgroup label="Electronics"><option>Smart Lock</option><option>TWS Earbuds</option><option>Smart Watch</option><option>Smart Sensors</option><option>Charger / Power Bank</option><option>LED Lighting</option><option>PCB / PCBA</option></optgroup>
+      <optgroup label="Apparel"><option>T-Shirt / Hoodie</option><option>Activewear</option><option>Home Textiles</option><option>Bags / Luggage</option></optgroup>
+      <optgroup label="Industrial"><option>CNC Parts</option><option>Injection Molds</option><option>Bearings</option><option>Valves / Fittings</option><option>Hardware Tools</option></optgroup>
+      <optgroup label="Home & Living"><option>Furniture</option><option>Kitchenware</option><option>Pet Supplies</option><option>Packaging</option></optgroup>
+    </select>
+    <div class="row"><div><label>Product</label><input placeholder="Smart Door Lock BL-200"></div><div><label>MOQ</label><input placeholder="100 units"></div></div>
+    <div class="row"><div><label>FOB Price</label><input placeholder="$28-35/unit"></div><div><label>Lead Time</label><input placeholder="15-25 days"></div></div>
+    <label>Certs</label><input placeholder="CE, FCC, RoHS">
+    <label>Key Advantage</label><input placeholder="10 yrs experience, 20+ countries, defect rate < 0.3%">
+    <label>DeepSeek API Key</label><input type="password" placeholder="sk-…">
+    <p class="text-muted mt-8">Free key at platform.deepseek.com · Stored locally only.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="closeSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LANGS=[{c:'auto',n:'Auto Detect',f:'🌐'},{c:'en',n:'English',f:'🇬🇧'},{c:'zh-CN',n:'简体中文',f:'🇨🇳'},{c:'es',n:'Español',f:'🇪🇸'},{c:'fr',n:'Français',f:'🇫🇷'},{c:'de',n:'Deutsch',f:'🇩🇪'},{c:'pt',n:'Português',f:'🇧🇷'},{c:'ar',n:'العربية',f:'🇸🇦'},{c:'ru',n:'Русский',f:'🇷🇺'},{c:'ja',n:'日本語',f:'🇯🇵'},{c:'ko',n:'한국어',f:'🇰🇷'},{c:'it',n:'Italiano',f:'🇮🇹'},{c:'nl',n:'Nederlands',f:'🇳🇱'},{c:'pl',n:'Polski',f:'🇵🇱'},{c:'tr',n:'Türkçe',f:'🇹🇷'},{c:'vi',n:'Tiếng Việt',f:'🇻🇳'},{c:'th',n:'ภาษาไทย',f:'🇹🇭'},{c:'id',n:'Bahasa Indonesia',f:'🇮🇩'},{c:'hi',n:'हिन्दी',f:'🇮🇳'}];
+let sl='auto';
+function rL(f=''){const q=f.toLowerCase();document.getElementById('langGrid').innerHTML=LANGS.filter(l=>l.n.toLowerCase().includes(q)||l.c.includes(q)).map(l=>`<div class="lang-opt${l.c===sl?' sel':''}" onclick="sL('${l.c}')"><span>${l.f}</span>${l.n}</div>`).join('');}
+function sL(c){sl=c;rL();document.getElementById('langPopover').classList.remove('show');}
+function filterLang(q){rL(q);}
+function toggleLang(){const p=document.getElementById('langPopover');p.classList.toggle('show');if(p.classList.contains('show'))rL();}
+document.addEventListener('click',e=>{if(!e.target.closest('.lang-wrap'))document.getElementById('langPopover').classList.remove('show');});
+
+function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='light'?'dark':'light';h.setAttribute('data-theme',n);document.getElementById('themeBtn').textContent=n==='light'?'☀':'☾';localStorage.setItem('tm_theme',n);}
+(function(){const s=localStorage.getItem('tm_theme')||'light';document.documentElement.setAttribute('data-theme',s);document.getElementById('themeBtn').textContent=s==='light'?'☀':'☾';})();
+
+function openSettings(){document.getElementById('settingsModal').classList.add('show');}
+function closeSettings(){document.getElementById('settingsModal').classList.remove('show');}
+document.getElementById('settingsModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSettings();});
+
+rL();
+</script>
+</body>
+</html>

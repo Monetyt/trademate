@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#5b5be0">
+<link rel="manifest" href="manifest.json">
+<title>TradeMate</title>
+<style>
+:root{--font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif}
+[data-theme="light"]{--bg:#fafbfc;--card-bg:#fff;--text:#0d0d1a;--text2:#5a5a72;--text3:#9494a8;--border:#e8e8f0;--accent:#5b5be0;--accent-light:#f0f0ff;--accent-glow:rgba(91,91,224,0.15);--gradient-1:#5b5be0;--gradient-2:#8b5cf6;--gradient-3:#3b82f6;--input-bg:#f8f9fc;--shadow-card:0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04);--shadow-hover:0 2px 6px rgba(0,0,0,0.06),0 12px 36px rgba(0,0,0,0.06);--shadow-btn:0 4px 14px rgba(91,91,224,0.3)}
+[data-theme="dark"]{--bg:#0a0a14;--card-bg:#13132a;--text:#e8e8f0;--text2:#9090a8;--text3:#606078;--border:#1e1e38;--accent:#7b7bff;--accent-light:rgba(123,123,255,0.08);--accent-glow:rgba(123,123,255,0.2);--gradient-1:#7b7bff;--gradient-2:#a78bfa;--gradient-3:#60a5fa;--input-bg:#0e0e24;--shadow-card:0 1px 3px rgba(0,0,0,0.2),0 8px 24px rgba(0,0,0,0.2);--shadow-hover:0 2px 6px rgba(0,0,0,0.3),0 12px 36px rgba(0,0,0,0.3);--shadow-btn:0 4px 14px rgba(123,123,255,0.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;background-image:radial-gradient(ellipse 80% 60% at 50% -20%,var(--accent-glow),transparent),radial-gradient(ellipse 40% 50% at 80% 80%,rgba(139,92,246,0.06),transparent);background-attachment:fixed}
+.topnav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);background:rgba(250,251,252,0.7);border-bottom:1px solid var(--border)}
+[data-theme="dark"] .topnav{background:rgba(10,10,20,0.7)}
+.topnav-brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;letter-spacing:-0.3px}
+.topnav-brand .logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--gradient-1),var(--gradient-2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;box-shadow:0 2px 8px rgba(91,91,224,0.3)}
+.topnav-actions{display:flex;align-items:center;gap:10px}
+.page{max-width:960px;margin:0 auto;padding:40px 32px 80px}
+.hero{text-align:center;margin-bottom:40px}
+.hero h1{font-size:32px;font-weight:750;letter-spacing:-0.8px;background:linear-gradient(135deg,var(--gradient-1),var(--gradient-3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.hero p{font-size:15px;color:var(--text2);max-width:520px;margin:0 auto;line-height:1.6}
+.type-strip{display:flex;gap:8px;margin-bottom:32px;overflow-x:auto;padding:4px 0;flex-wrap:wrap;justify-content:center}
+.type-pill{padding:8px 18px;border-radius:24px;font-size:13px;font-weight:480;white-space:nowrap;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--card-bg);color:var(--text2)}
+.type-pill:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.type-pill.active{background:linear-gradient(135deg,var(--gradient-1),var(--gradient-2));color:#fff;border-color:transparent;font-weight:550;box-shadow:var(--shadow-btn)}
+.workspace{display:grid;grid-template-columns:1fr;gap:20px}
+.card{background:var(--card-bg);border-radius:16px;padding:28px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+textarea{width:100%;min-height:200px;padding:16px;border:1px solid var(--border);border-radius:12px;font-family:var(--font);font-size:13px;line-height:1.7;color:var(--text);background:var(--input-bg);resize:vertical;transition:all .2s}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-light)}
+textarea::placeholder{color:var(--text3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 24px;border:none;border-radius:12px;font-family:var(--font);font-size:14px;font-weight:580;cursor:pointer;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,var(--gradient-1),var(--gradient-2));color:#fff;width:100%;box-shadow:var(--shadow-btn)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(91,91,224,0.4)}
+.btn-primary:disabled{opacity:0.5;transform:none;cursor:not-allowed;box-shadow:none}
+.btn-ghost{background:transparent;color:var(--text2);font-size:12px;padding:6px 12px;border-radius:8px}
+.btn-ghost:hover{background:var(--input-bg);color:var(--text)}
+.result-panel{min-height:200px;padding:24px;background:var(--input-bg);border-radius:12px;font-size:13px;line-height:1.75;color:var(--text);white-space:pre-wrap;word-wrap:break-word}
+.result-panel.loading{display:flex;align-items:center;justify-content:center;color:var(--text3)}
+.result-panel.loading::before{content:"";width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-right:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stages{display:flex;gap:14px;margin-bottom:28px;justify-content:center;align-items:center}
+.stage{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3)}
+.stage .dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.stage.active .dot{background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
+.stage.active{color:var(--accent);font-weight:500}
+.stage.done .dot{background:#10b981}
+.stage-line{width:24px;height:1px;background:var(--border)}
+.history{margin-top:40px}
+.history h3{font-size:15px;font-weight:600;margin-bottom:12px}
+.history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.history-card{padding:16px;background:var(--card-bg);border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.history-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.history-card .hc-type{font-size:11px;color:var(--accent);font-weight:550;margin-bottom:4px}
+.history-card .hc-title{font-size:13px;font-weight:500;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.history-card .hc-meta{font-size:11px;color:var(--text3)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card-bg);border-radius:16px;width:500px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);padding:28px}
+.modal h3{font-size:16px;font-weight:650;margin-bottom:18px}
+.modal label{display:block;font-size:11px;font-weight:550;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px}
+.modal input,.modal select{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-family:var(--font);font-size:13px;margin-bottom:14px;background:var(--input-bg);color:var(--text)}
+.modal .row{display:flex;gap:12px}.modal .row>*{flex:1}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.sys-lang-select{padding:7px 14px;border:1px solid var(--border);border-radius:22px;font-size:12px;cursor:pointer;background:var(--card-bg);color:var(--text2);font-weight:450;font-family:var(--font)}
+.theme-dot{width:34px;height:34px;border-radius:17px;border:1px solid var(--border);background:var(--card-bg);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.theme-dot:hover{border-color:var(--accent);background:var(--input-bg)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card-bg);color:var(--text);padding:10px 24px;border-radius:24px;box-shadow:var(--shadow-hover);border:1px solid var(--border);font-size:13px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.stat-card{text-align:center;padding:16px 12px;background:var(--input-bg);border-radius:12px;border:1px solid var(--border)}.stat-card .num{font-size:28px;font-weight:700;color:var(--accent)}.stat-card .lbl{font-size:11px;color:var(--text3);margin-top:2px}.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}.bar-row .bar-lbl{font-size:11px;color:var(--text2);width:80px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}.bar-row .bar-track{flex:1;height:18px;background:var(--border);border-radius:9px;overflow:hidden}.bar-row .bar-fill{height:100%;background:var(--accent);border-radius:9px;transition:width .4s;min-width:4px}.followup-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:var(--input-bg);margin-bottom:6px}.followup-item.overdue{border-left:3px solid #ef4444}.followup-item .fu-info{flex:1;min-width:0}.followup-item .fu-title{font-size:13px;font-weight:500}.followup-item .fu-date{font-size:11px;color:var(--text3)}.followup-item .fu-actions{display:flex;gap:4px}@media(max-width:800px){.hero h1{font-size:24px}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-brand"><div class="logo">T</div>TradeMate</div>
+  <div class="topnav-actions">
+    <select class="sys-lang-select" id="sysLang"></select>
+    <button class="theme-dot" id="themeBtn" title="切换深色/浅色模式">☀</button>
+    <button class="btn btn-ghost" id="settingsBtn">设置</button>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <h1 data-t="heroTitle">写出更高成交率的回复</h1>
+    <p data-t="heroDesc">粘贴买家询盘，AI 自动生成专业回复邮件和谈判策略。支持 10 种邮件类型。</p>
+  </div>
+  <div class="stages">
+    <span class="stage active" id="stg1"><span class="dot"></span><span data-t="stage1">粘贴询盘</span></span>
+    <span class="stage-line"></span>
+    <span class="stage" id="stg2"><span class="dot"></span><span data-t="stage2">AI 分析</span></span>
+    <span class="stage-line"></span>
+    <span class="stage" id="stg3"><span class="dot"></span><span data-t="stage3">生成回复</span></span>
+  </div>
+  <div class="type-strip" id="typeStrip"></div>
+  <div class="workspace">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);" data-t="inputLabel">买家询盘</span>
+        <span style="font-size:11px;color:var(--text3);" data-t="inputHint">客户原语言，AI 自动识别</span>
+      </div>
+      <textarea id="inquiryInput" data-t-placeholder="inputPh" placeholder="在此粘贴买家询盘邮件…"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button class="btn btn-ghost" id="demoBtn" data-t="loadExample">查看示例</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnGenerate">
+      <span id="btnText" data-t="generate">生成回复</span>
+    </button>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);" data-t="resultLabel">生成结果</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span style="font-size:11px;color:var(--text3);" data-t="outputLang">回复语言</span>
+          <select id="outputLang" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px;font-family:var(--font);background:var(--input-bg);color:var(--text);cursor:pointer;"></select>
+          <button class="btn btn-ghost" id="copyBtn" style="display:none;" data-t="copy">复制</button>
+          <button class="btn btn-ghost" id="saveBtn" style="display:none;" data-t="save">收藏</button>
+          <button class="btn btn-ghost" id="clearBtn" style="display:none;" data-t="clear">清空</button>
+        </div>
+      </div>
+      <div class="result-panel" id="resultPanel" data-t="resultPlaceholder">回复邮件将在这里显示。</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:32px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);" data-t="dashboard">数据看板</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;" id="statsCards"></div>
+    <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div><span style="font-size:11px;color:var(--text3);" data-t="byType">按类型</span><div id="chartTypes" style="margin-top:8px;"></div></div>
+      <div><span style="font-size:11px;color:var(--text3);" data-t="byLang">按语言</span><div id="chartLangs" style="margin-top:8px;"></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;" id="followupCard">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);" data-t="followup">跟进看板</span>
+      <button class="btn btn-ghost" id="addFollowupBtn" style="display:none;" data-t="addFollowup">+ 添加跟进</button>
+    </div>
+    <div id="followupList"><p style="color:var(--text3);font-size:13px;" data-t="noFollowups">暂无跟进事项。生成回复后可添加到跟进列表。</p></div>
+  </div>
+
+  <div class="history">
+    <h3 data-t="history">最近记录</h3>
+    <div class="history-grid" id="historyGrid"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h3 data-t="settingsTitle">产品信息设置</h3>
+    <label data-t="settingsTemplate">行业模板</label>
+    <select id="templateSelect"><option value="" data-t="settingsChoose">选择行业快速填入…</option>
+      <optgroup label="电子"><option value="lock">智能门锁</option><option value="earbuds">TWS 蓝牙耳机</option><option value="watch">智能手表</option><option value="sensor">智能传感器</option><option value="charger">充电器/移动电源</option><option value="led">LED 照明</option><option value="pcb">PCB/PCBA</option></optgroup>
+      <optgroup label="服装"><option value="tshirt">T恤/卫衣</option><option value="activewear">运动服</option><option value="textile">家纺</option><option value="bags">箱包</option></optgroup>
+      <optgroup label="工业"><option value="cnc">CNC 零件</option><option value="mold">注塑模具</option><option value="bearing">轴承</option><option value="valve">阀门</option><option value="tools">五金工具</option></optgroup>
+      <optgroup label="家居"><option value="furniture">家具</option><option value="kitchen">厨具</option><option value="pet">宠物用品</option><option value="packaging">包装印刷</option></optgroup>
+    </select>
+    <div class="row"><div><label data-t="settingsProduct">产品名称</label><input id="setProduct"></div><div><label data-t="settingsMoq">MOQ</label><input id="setMoq"></div></div>
+    <div class="row"><div><label data-t="settingsPrice">FOB 价格</label><input id="setPrice"></div><div><label data-t="settingsDelivery">交期</label><input id="setDelivery"></div></div>
+    <label data-t="settingsCerts">认证</label><input id="setCerts">
+    <label data-t="settingsAdvantage">公司优势</label><input id="setAdvantage">
+    <label>DeepSeek API Key</label><input id="setApiKey" type="password" placeholder="sk-…">
+    <p style="font-size:11px;color:var(--text3);margin-top:8px;" data-t="settingsApiHint">在 platform.deepseek.com 免费注册。密钥仅保存在你的浏览器。</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modalCancel" data-t="cancel">取消</button>
+      <button class="btn btn-primary" id="modalSave" style="width:auto;padding:10px 24px;" data-t="saveBtn">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================================================
+// 系统语言 = UI + 默认输出   输出语言 = 可覆盖
+// 客户语言 = 输入框内容, AI 自动识别
+// ===================================================
+
+const T = {
+  'zh-CN': {
+    heroTitle:'写出更高成交率的回复',heroDesc:'粘贴买家询盘，AI 自动生成专业回复邮件和谈判策略。支持 10 种邮件类型。',
+    stage1:'粘贴询盘',stage2:'AI 分析',stage3:'生成回复',
+    inputLabel:'买家询盘',inputHint:'客户原语言，AI 自动识别',inputPh:'在此粘贴买家询盘邮件…',
+    loadExample:'查看示例',generate:'生成回复',generating:'生成中…',
+    outputLang:'回复语言',followSystem:'跟随系统',
+    resultLabel:'生成结果',resultPlaceholder:'回复邮件将在这里显示。',copy:'复制',save:'收藏',clear:'清空',
+    history:'最近记录',historyEmpty:'还没有记录。生成第一封回复吧！',
+    historyRestored:'已恢复。点击生成回复重新运行。',
+    settingsTitle:'产品信息设置',settingsTemplate:'行业模板',settingsChoose:'选择行业快速填入…',
+    settingsProduct:'产品名称',settingsMoq:'MOQ',settingsPrice:'FOB 价格',
+    settingsDelivery:'交期',settingsCerts:'认证',settingsAdvantage:'公司优势',
+    settingsApiHint:'在 platform.deepseek.com 免费注册。密钥仅保存在你的浏览器。',
+    cancel:'取消',saveBtn:'保存',
+    toastSettingsSaved:'设置已保存',toastCopied:'已复制',toastSaved:'已收藏',
+    toastDemo:'示例已加载。点击生成回复！',toastDemoAuto:'示例已加载，门锁模板已填入。点击生成回复！',
+    toastNeedInquiry:'请先粘贴买家询盘',toastNeedKey:'请先在设置中填入 DeepSeek API Key',
+    toastGenerated:'回复已生成',
+    dashboard:'数据看板',byType:'按类型',byLang:'按语言',totalEmails:'总生成',thisWeek:'本周',activeFollowups:'待跟进',
+    followup:'跟进看板',addFollowup:'+ 添加跟进',noFollowups:'暂无跟进事项。生成回复后可添加到跟进列表。',followupAdded:'已添加到跟进列表',followupDone:'已标记完成',
+    inquiryReply:'询盘回复',whatsapp:'WhatsApp 速回',quote:'报价跟进',aftersale:'售后处理',
+    coldemail:'开发信',exhibition:'展会邀请',confirm:'订单确认',shipping:'发货通知',payment:'催款提醒',greeting:'节日问候',
+    inqPh:'在此粘贴买家询盘邮件…',waPh:'在此粘贴 WhatsApp 消息…',qtPh:'描述上次报价情况…',
+    asPh:'描述售后问题…',cePh:'目标客户信息（选填）…',exPh:'展会名称、日期、城市、展位号…',
+    cfPh:'订单详情：订单号、产品、数量、金额…',shPh:'运单号、物流公司、发货日期…',
+    pmPh:'发票号、金额、到期日、客户关系…',grPh:'客户名称、国家、合作历史…'
+  },
+  en: {
+    heroTitle:'Write better replies. Close more deals.',heroDesc:'Paste a buyer inquiry. AI generates a professional response with negotiation strategy.',
+    stage1:'Paste Inquiry',stage2:'AI Analyzes',stage3:'Get Reply',
+    inputLabel:'Buyer Inquiry',inputHint:"Customer's language, auto-detected",inputPh:'Paste the buyer inquiry here…',
+    loadExample:'Load Example',generate:'Generate Response',generating:'Generating…',
+    outputLang:'Reply in',followSystem:'Follow System',
+    resultLabel:'Result',resultPlaceholder:'Your reply will appear here.',copy:'Copy',save:'Save',clear:'Clear',
+    history:'Recent',historyEmpty:'No history yet. Generate your first reply!',
+    historyRestored:'Restored. Click Generate to re-run.',
+    settingsTitle:'Settings',settingsTemplate:'Industry Template',settingsChoose:'Choose to auto-fill…',
+    settingsProduct:'Product Name',settingsMoq:'MOQ',settingsPrice:'FOB Price',
+    settingsDelivery:'Lead Time',settingsCerts:'Certifications',settingsAdvantage:'Key Advantage',
+    settingsApiHint:'Get a free key at platform.deepseek.com. Stored in your browser only.',
+    cancel:'Cancel',saveBtn:'Save',
+    toastSettingsSaved:'Settings saved',toastCopied:'Copied',toastSaved:'Saved',
+    toastDemo:'Demo loaded. Click Generate!',toastDemoAuto:'Demo loaded, lock template filled. Click Generate!',
+    toastNeedInquiry:'Please paste a buyer inquiry',toastNeedKey:'Please set your DeepSeek API Key in Settings',
+    toastGenerated:'Reply generated!',
+    dashboard:'Dashboard',byType:'By Type',byLang:'By Language',totalEmails:'Total',thisWeek:'This Week',activeFollowups:'Active',
+    followup:'Follow-up Board',addFollowup:'+ Add Follow-up',noFollowups:'No follow-ups yet. Save a reply to add one.',followupAdded:'Added to follow-ups',followupDone:'Marked done',
+    inquiryReply:'Inquiry Reply',whatsapp:'WhatsApp Quick Reply',quote:'Quote Follow-up',aftersale:'After-Sales',
+    coldemail:'Cold Email',exhibition:'Exhibition Invite',confirm:'Order Confirmation',shipping:'Shipping Notice',payment:'Payment Reminder',greeting:'Holiday Greeting',
+    inqPh:'Paste the buyer inquiry email here…',waPh:'Paste the WhatsApp message here…',qtPh:'Describe the quote situation…',
+    asPh:'Describe the after-sales issue…',cePh:'Target customer info (optional)…',exPh:'Exhibition name, dates, city, booth…',
+    cfPh:'Order details: PO#, products, qty, amount…',shPh:'Tracking number, carrier, ETD, ETA…',
+    pmPh:'Invoice#, amount, due date, relationship…',grPh:'Customer name, country, relationship…'
+  },
+  ja: {
+    heroTitle:'より良い返信で、より多くの成約を。',heroDesc:'バイヤーの問い合わせを貼り付けると、AIが専門的な返信メールと交渉戦略を生成します。',
+    stage1:'問合せ貼付',stage2:'AI分析',stage3:'返信生成',
+    inputLabel:'バイヤーの問合せ',inputHint:'顧客の言語、AIが自動検出',inputPh:'バイヤーの問い合わせをここに貼り付け…',
+    loadExample:'サンプルを見る',generate:'返信を生成',generating:'生成中…',
+    outputLang:'返信言語',followSystem:'システムに従う',
+    resultLabel:'生成結果',resultPlaceholder:'返信がここに表示されます。',copy:'コピー',save:'保存',clear:'クリア',
+    history:'最近の履歴',historyEmpty:'まだ履歴がありません。最初の返信を生成してください！',
+    historyRestored:'復元しました。「返信を生成」をクリックして再実行してください。',
+    settingsTitle:'設定',settingsTemplate:'業界テンプレート',settingsChoose:'選択して自動入力…',
+    settingsProduct:'製品名',settingsMoq:'MOQ',settingsPrice:'FOB価格',
+    settingsDelivery:'納期',settingsCerts:'認証',settingsAdvantage:'強み',
+    settingsApiHint:'platform.deepseek.com で無料キーを取得。ブラウザにのみ保存されます。',
+    cancel:'キャンセル',saveBtn:'保存',
+    toastSettingsSaved:'設定を保存しました',toastCopied:'コピーしました',toastSaved:'保存しました',
+    toastDemo:'サンプルを読み込みました。「返信を生成」をクリック！',toastDemoAuto:'サンプルとテンプレートを読み込みました。',
+    toastNeedInquiry:'バイヤーの問い合わせを貼り付けてください',toastNeedKey:'設定でDeepSeek APIキーを設定してください',
+    toastGenerated:'返信を生成しました！',
+    inquiryReply:'問合せ返信',whatsapp:'WhatsApp返信',quote:'見積もりフォロー',aftersale:'アフターサービス',
+    coldemail:'開発メール',exhibition:'展示会案内',confirm:'注文確認',shipping:'出荷通知',payment:'支払催促',greeting:'挨拶状',
+    inqPh:'バイヤーの問い合わせをここに…',waPh:'WhatsAppメッセージをここに…',qtPh:'見積もり状況を説明…',
+    asPh:'アフターサービスの問題を説明…',cePh:'ターゲット顧客情報（任意）…',exPh:'展示会名、日付、都市、ブース番号…',
+    cfPh:'注文詳細：PO番号、製品、数量、金額…',shPh:'追跡番号、配送会社、出荷日…',
+    pmPh:'請求書番号、金額、期限、顧客関係…',grPh:'顧客名、国、取引履歴…'
+  },
+  ko: {
+    heroTitle:'더 나은 답변으로 더 많은 거래를 성사시키세요.',heroDesc:'바이어 문의를 붙여넣으면 AI가 전문적인 답변과 협상 전략을 생성합니다.',
+    stage1:'문의 붙여넣기',stage2:'AI 분석',stage3:'답변 생성',
+    inputLabel:'바이어 문의',inputHint:'고객 언어, AI 자동 감지',inputPh:'바이어 문의를 여기에 붙여넣으세요…',
+    loadExample:'예시 보기',generate:'답변 생성',generating:'생성 중…',
+    outputLang:'답변 언어',followSystem:'시스템 따르기',
+    resultLabel:'생성 결과',resultPlaceholder:'답변이 여기에 표시됩니다.',copy:'복사',save:'저장',clear:'지우기',
+    history:'최근 기록',historyEmpty:'아직 기록이 없습니다. 첫 번째 답변을 생성하세요!',
+    historyRestored:'복원되었습니다. 「답변 생성」을 클릭하여 다시 실행하세요.',
+    settingsTitle:'설정',settingsTemplate:'업종 템플릿',settingsChoose:'선택하여 자동 입력…',
+    settingsProduct:'제품명',settingsMoq:'MOQ',settingsPrice:'FOB 가격',
+    settingsDelivery:'납기',settingsCerts:'인증',settingsAdvantage:'강점',
+    settingsApiHint:'platform.deepseek.com에서 무료 키 발급. 브라우저에만 저장됩니다.',
+    cancel:'취소',saveBtn:'저장',
+    toastSettingsSaved:'설정 저장 완료',toastCopied:'복사 완료',toastSaved:'저장 완료',
+    toastDemo:'예시 로드 완료. 「답변 생성」을 클릭!',toastDemoAuto:'예시 및 템플릿 로드 완료.',
+    toastNeedInquiry:'바이어 문의를 먼저 붙여넣으세요',toastNeedKey:'설정에서 DeepSeek API 키를 입력하세요',
+    toastGenerated:'답변이 생성되었습니다!',
+    inquiryReply:'문의 답변',whatsapp:'WhatsApp 답변',quote:'견적 후속',aftersale:'AS 처리',
+    coldemail:'개발 메일',exhibition:'전시회 초대',confirm:'주문 확인',shipping:'배송通知',payment:'결제 독촉',greeting:'인사말',
+    inqPh:'바이어 문의를 여기에…',waPh:'WhatsApp 메시지를 여기에…',qtPh:'견적 상황 설명…',
+    asPh:'AS 문제 설명…',cePh:'타겟 고객 정보(선택)…',exPh:'전시회명, 날짜, 도시, 부스…',
+    cfPh:'주문 상세: PO번호, 제품, 수량, 금액…',shPh:'운송장번호, 배송사, 출하일…',
+    pmPh:'청구서번호, 금액, 기한, 고객 관계…',grPh:'고객명, 국가, 거래 이력…'
+  },
+  'zh-TW':{heroTitle:'寫出更高成交率的回覆',heroDesc:'貼上買家詢盤，AI 自動生成專業回覆郵件和談判策略。',stage1:'貼上詢盤',stage2:'AI 分析',stage3:'生成回覆',inputLabel:'買家詢盤',inputHint:'客戶原語言，AI 自動識別',inputPh:'在此貼上買家詢盤郵件…',loadExample:'查看示例',generate:'生成回覆',generating:'生成中…',outputLang:'回覆語言',followSystem:'跟隨系統',resultLabel:'生成結果',resultPlaceholder:'回覆郵件將在這裡顯示。',copy:'複製',save:'收藏',clear:'清空',history:'最近記錄',historyEmpty:'還沒有記錄。',historyRestored:'已恢復。',settingsTitle:'產品資訊設定',settingsTemplate:'行業模板',settingsChoose:'選擇行業快速填入…',settingsProduct:'產品名稱',settingsMoq:'MOQ',settingsPrice:'FOB 價格',settingsDelivery:'交期',settingsCerts:'認證',settingsAdvantage:'公司優勢',settingsApiHint:'在 platform.deepseek.com 免費註冊。',cancel:'取消',saveBtn:'儲存',toastSettingsSaved:'設定已儲存',toastCopied:'已複製',toastSaved:'已收藏',toastDemo:'示例已載入',toastDemoAuto:'示例及模板已載入',toastNeedInquiry:'請先貼上買家詢盤',toastNeedKey:'請先在設定中填入 API Key',toastGenerated:'回覆已生成！',inquiryReply:'詢盤回覆',whatsapp:'WhatsApp 速回',quote:'報價跟進',aftersale:'售後處理',coldemail:'開發信',exhibition:'展會邀請',confirm:'訂單確認',shipping:'發貨通知',payment:'催款提醒',greeting:'節日問候',inqPh:'在此貼上買家詢盤…',waPh:'在此貼上 WhatsApp 訊息…',qtPh:'描述上次報價情況…',asPh:'描述售後問題…',cePh:'目標客戶資訊…',exPh:'展會名稱、日期、城市…',cfPh:'訂單詳情：訂單號、產品、數量…',shPh:'運單號、物流公司…',pmPh:'發票號、金額、到期日…',grPh:'客戶名稱、國家…'},
+  es:{heroTitle:'Escribe mejores respuestas. Cierra más tratos.',heroDesc:'Pega la consulta del comprador. La IA genera una respuesta profesional con estrategia de negociación.',stage1:'Pegar consulta',stage2:'IA analiza',stage3:'Obtener respuesta',inputLabel:'Consulta del comprador',inputHint:'Idioma del cliente, auto-detectado',inputPh:'Pega la consulta del comprador aquí…',loadExample:'Ver ejemplo',generate:'Generar respuesta',generating:'Generando…',outputLang:'Idioma de respuesta',followSystem:'Seguir sistema',resultLabel:'Resultado',resultPlaceholder:'Tu respuesta aparecerá aquí.',copy:'Copiar',save:'Guardar',clear:'Limpiar',history:'Reciente',historyEmpty:'Sin historial aún.',historyRestored:'Restaurado.',settingsTitle:'Configuración',settingsTemplate:'Plantilla industrial',settingsChoose:'Elegir para auto-llenar…',settingsProduct:'Nombre del producto',settingsMoq:'MOQ',settingsPrice:'Precio FOB',settingsDelivery:'Plazo de entrega',settingsCerts:'Certificaciones',settingsAdvantage:'Ventaja clave',settingsApiHint:'Obtén clave gratis en platform.deepseek.com.',cancel:'Cancelar',saveBtn:'Guardar',toastSettingsSaved:'Configuración guardada',toastCopied:'Copiado',toastSaved:'Guardado',toastDemo:'Ejemplo cargado',toastDemoAuto:'Ejemplo y plantilla cargados',toastNeedInquiry:'Pega una consulta primero',toastNeedKey:'Configura tu API Key en Ajustes',toastGenerated:'¡Respuesta generada!',inquiryReply:'Respuesta a consulta',whatsapp:'Respuesta WhatsApp',quote:'Seguimiento de cotización',aftersale:'Postventa',coldemail:'Email en frío',exhibition:'Invitación a feria',confirm:'Confirmación de pedido',shipping:'Aviso de envío',payment:'Recordatorio de pago',greeting:'Saludo festivo',inqPh:'Pega la consulta aquí…',waPh:'Pega el mensaje de WhatsApp…',qtPh:'Describe la situación de la cotización…',asPh:'Describe el problema…',cePh:'Info del cliente objetivo…',exPh:'Nombre, fecha, ciudad de la feria…',cfPh:'Detalles: PO, productos, cantidad…',shPh:'Número de seguimiento, transportista…',pmPh:'Factura, importe, vencimiento…',grPh:'Nombre del cliente, país…'},
+  fr:{heroTitle:'De meilleures réponses. Plus de contrats.',heroDesc:'Collez la demande de l\'acheteur. L\'IA génère une réponse professionnelle avec stratégie de négociation.',stage1:'Coller la demande',stage2:'IA analyse',stage3:'Obtenir la réponse',inputLabel:'Demande acheteur',inputHint:'Langue du client, détectée automatiquement',inputPh:'Collez la demande ici…',loadExample:'Voir exemple',generate:'Générer la réponse',generating:'Génération…',outputLang:'Langue de réponse',followSystem:'Suivre le système',resultLabel:'Résultat',resultPlaceholder:'Votre réponse apparaîtra ici.',copy:'Copier',save:'Enregistrer',clear:'Effacer',history:'Récent',historyEmpty:'Pas encore d\'historique.',historyRestored:'Restauré.',settingsTitle:'Paramètres',settingsTemplate:'Modèle industriel',settingsChoose:'Choisir pour remplir…',settingsProduct:'Nom du produit',settingsMoq:'MOQ',settingsPrice:'Prix FOB',settingsDelivery:'Délai',settingsCerts:'Certifications',settingsAdvantage:'Avantage clé',settingsApiHint:'Obtenez une clé gratuite sur platform.deepseek.com.',cancel:'Annuler',saveBtn:'Enregistrer',toastSettingsSaved:'Paramètres enregistrés',toastCopied:'Copié',toastSaved:'Enregistré',toastDemo:'Exemple chargé',toastDemoAuto:'Exemple et modèle chargés',toastNeedInquiry:'Collez d\'abord une demande',toastNeedKey:'Configurez votre clé API',toastGenerated:'Réponse générée!',inquiryReply:'Réponse demande',whatsapp:'Réponse WhatsApp',quote:'Suivi devis',aftersale:'SAV',coldemail:'Email prospection',exhibition:'Invitation salon',confirm:'Confirmation commande',shipping:'Avis expédition',payment:'Rappel paiement',greeting:'Vœux',inqPh:'Collez la demande ici…',waPh:'Collez le message WhatsApp…',qtPh:'Décrivez la situation du devis…',asPh:'Décrivez le problème SAV…',cePh:'Info client cible…',exPh:'Nom, date, ville du salon…',cfPh:'Détails: PO, produits, quantité…',shPh:'Numéro suivi, transporteur…',pmPh:'Facture, montant, échéance…',grPh:'Nom client, pays…'},
+  de:{heroTitle:'Bessere Antworten. Mehr Abschlüsse.',heroDesc:'Käuferanfrage einfügen. KI erstellt professionelle Antwort mit Verhandlungsstrategie.',stage1:'Anfrage einfügen',stage2:'KI analysiert',stage3:'Antwort erhalten',inputLabel:'Käuferanfrage',inputHint:'Kundensprache, automatisch erkannt',inputPh:'Käuferanfrage hier einfügen…',loadExample:'Beispiel ansehen',generate:'Antwort generieren',generating:'Generierung…',outputLang:'Antwortsprache',followSystem:'System folgen',resultLabel:'Ergebnis',resultPlaceholder:'Ihre Antwort erscheint hier.',copy:'Kopieren',save:'Speichern',clear:'Löschen',history:'Verlauf',historyEmpty:'Noch kein Verlauf.',historyRestored:'Wiederhergestellt.',settingsTitle:'Einstellungen',settingsTemplate:'Branchenvorlage',settingsChoose:'Zum Ausfüllen wählen…',settingsProduct:'Produktname',settingsMoq:'MOQ',settingsPrice:'FOB-Preis',settingsDelivery:'Lieferzeit',settingsCerts:'Zertifizierungen',settingsAdvantage:'Kernvorteil',settingsApiHint:'Kostenloser Key auf platform.deepseek.com.',cancel:'Abbrechen',saveBtn:'Speichern',toastSettingsSaved:'Einstellungen gespeichert',toastCopied:'Kopiert',toastSaved:'Gespeichert',toastDemo:'Beispiel geladen',toastDemoAuto:'Beispiel und Vorlage geladen',toastNeedInquiry:'Bitte zuerst eine Anfrage einfügen',toastNeedKey:'API-Key in Einstellungen konfigurieren',toastGenerated:'Antwort generiert!',inquiryReply:'Anfrageantwort',whatsapp:'WhatsApp-Antwort',quote:'Angebotsnachverfolgung',aftersale:'Kundendienst',coldemail:'Kaltakquise',exhibition:'Messe-Einladung',confirm:'Auftragsbestätigung',shipping:'Versandbenachrichtigung',payment:'Zahlungserinnerung',greeting:'Feiertagsgrüße',inqPh:'Anfrage hier einfügen…',waPh:'WhatsApp-Nachricht einfügen…',qtPh:'Angebotssituation beschreiben…',asPh:'Problem beschreiben…',cePh:'Zielkundeninfo…',exPh:'Messename, Datum, Stadt…',cfPh:'Details: PO, Produkte, Menge…',shPh:'Sendungsnummer, Spediteur…',pmPh:'Rechnung, Betrag, Fälligkeit…',grPh:'Kundenname, Land…'},
+  pt:{heroTitle:'Respostas melhores. Mais negócios fechados.',heroDesc:'Cole a consulta do comprador. A IA gera uma resposta profissional com estratégia de negociação.',stage1:'Colar consulta',stage2:'IA analisa',stage3:'Obter resposta',inputLabel:'Consulta do comprador',inputHint:'Idioma do cliente, detectado automaticamente',inputPh:'Cole a consulta aqui…',loadExample:'Ver exemplo',generate:'Gerar resposta',generating:'Gerando…',outputLang:'Idioma da resposta',followSystem:'Seguir sistema',resultLabel:'Resultado',resultPlaceholder:'Sua resposta aparecerá aqui.',copy:'Copiar',save:'Salvar',clear:'Limpar',history:'Recente',historyEmpty:'Sem histórico ainda.',historyRestored:'Restaurado.',settingsTitle:'Configurações',settingsTemplate:'Modelo industrial',settingsChoose:'Escolher para preencher…',settingsProduct:'Nome do produto',settingsMoq:'MOQ',settingsPrice:'Preço FOB',settingsDelivery:'Prazo de entrega',settingsCerts:'Certificações',settingsAdvantage:'Diferencial',settingsApiHint:'Obtenha chave grátis em platform.deepseek.com.',cancel:'Cancelar',saveBtn:'Salvar',toastSettingsSaved:'Configurações salvas',toastCopied:'Copiado',toastSaved:'Salvo',toastDemo:'Exemplo carregado',toastDemoAuto:'Exemplo e modelo carregados',toastNeedInquiry:'Cole uma consulta primeiro',toastNeedKey:'Configure sua chave API',toastGenerated:'Resposta gerada!',inquiryReply:'Resposta à consulta',whatsapp:'Resposta WhatsApp',quote:'Acompanhamento de cotação',aftersale:'Pós-venda',coldemail:'Email frio',exhibition:'Convite para feira',confirm:'Confirmação de pedido',shipping:'Aviso de envio',payment:'Lembrete de pagamento',greeting:'Saudação',inqPh:'Cole a consulta aqui…',waPh:'Cole a mensagem do WhatsApp…',qtPh:'Descreva a situação da cotação…',asPh:'Descreva o problema…',cePh:'Info do cliente alvo…',exPh:'Nome, data, cidade da feira…',cfPh:'Detalhes: PO, produtos, qtd…',shPh:'Código de rastreio, transportadora…',pmPh:'Fatura, valor, vencimento…',grPh:'Nome do cliente, país…'},
+  it:{heroTitle:'Risposte migliori. Più affari chiusi.',heroDesc:'Incolla la richiesta. L\'IA genera una risposta professionale con strategia di negoziazione.',stage1:'Incolla richiesta',stage2:'L\'IA analizza',stage3:'Ottieni risposta',inputLabel:'Richiesta acquirente',inputHint:'Lingua cliente, rilevata automaticamente',inputPh:'Incolla la richiesta qui…',loadExample:'Vedi esempio',generate:'Genera risposta',generating:'Generazione…',outputLang:'Lingua risposta',followSystem:'Segui sistema',resultLabel:'Risultato',resultPlaceholder:'La tua risposta apparirà qui.',copy:'Copia',save:'Salva',clear:'Pulisci',history:'Recenti',historyEmpty:'Nessuna cronologia.',historyRestored:'Ripristinato.',settingsTitle:'Impostazioni',settingsTemplate:'Modello industriale',settingsChoose:'Scegli per compilare…',settingsProduct:'Nome prodotto',settingsMoq:'MOQ',settingsPrice:'Prezzo FOB',settingsDelivery:'Tempi di consegna',settingsCerts:'Certificazioni',settingsAdvantage:'Vantaggio chiave',settingsApiHint:'Ottieni chiave gratis su platform.deepseek.com.',cancel:'Annulla',saveBtn:'Salva',toastSettingsSaved:'Impostazioni salvate',toastCopied:'Copiato',toastSaved:'Salvato',toastDemo:'Esempio caricato',toastDemoAuto:'Esempio e modello caricati',toastNeedInquiry:'Incolla prima una richiesta',toastNeedKey:'Configura la chiave API',toastGenerated:'Risposta generata!',inquiryReply:'Risposta richiesta',whatsapp:'Risposta WhatsApp',quote:'Follow-up preventivo',aftersale:'Post-vendita',coldemail:'Email a freddo',exhibition:'Invito fiera',confirm:'Conferma ordine',shipping:'Avviso spedizione',payment:'Promemoria pagamento',greeting:'Auguri',inqPh:'Incolla la richiesta qui…',waPh:'Incolla messaggio WhatsApp…',qtPh:'Descrivi la situazione…',asPh:'Descrivi il problema…',cePh:'Info cliente target…',exPh:'Nome, data, città fiera…',cfPh:'Dettagli: PO, prodotti, q.tà…',shPh:'Tracking, corriere…',pmPh:'Fattura, importo, scadenza…',grPh:'Nome cliente, paese…'},
+  ru:{heroTitle:'Лучшие ответы. Больше сделок.',heroDesc:'Вставьте запрос покупателя. ИИ создаст профессиональный ответ со стратегией переговоров.',stage1:'Вставить запрос',stage2:'ИИ анализирует',stage3:'Получить ответ',inputLabel:'Запрос покупателя',inputHint:'Язык клиента, автоопределение',inputPh:'Вставьте запрос сюда…',loadExample:'Пример',generate:'Создать ответ',generating:'Создание…',outputLang:'Язык ответа',followSystem:'Как в системе',resultLabel:'Результат',resultPlaceholder:'Ответ появится здесь.',copy:'Копировать',save:'Сохранить',clear:'Очистить',history:'История',historyEmpty:'Истории пока нет.',historyRestored:'Восстановлено.',settingsTitle:'Настройки',settingsTemplate:'Шаблон отрасли',settingsChoose:'Выбрать для автозаполнения…',settingsProduct:'Название товара',settingsMoq:'MOQ',settingsPrice:'Цена FOB',settingsDelivery:'Срок поставки',settingsCerts:'Сертификаты',settingsAdvantage:'Ключевое преимущество',settingsApiHint:'Бесплатный ключ на platform.deepseek.com.',cancel:'Отмена',saveBtn:'Сохранить',toastSettingsSaved:'Настройки сохранены',toastCopied:'Скопировано',toastSaved:'Сохранено',toastDemo:'Пример загружен',toastDemoAuto:'Пример и шаблон загружены',toastNeedInquiry:'Сначала вставьте запрос',toastNeedKey:'Настройте API ключ',toastGenerated:'Ответ создан!',inquiryReply:'Ответ на запрос',whatsapp:'Ответ WhatsApp',quote:'Отслеживание КП',aftersale:'Послепродажное',coldemail:'Холодное письмо',exhibition:'Приглашение на выставку',confirm:'Подтверждение заказа',shipping:'Уведомление об отправке',payment:'Напоминание об оплате',greeting:'Поздравление',inqPh:'Вставьте запрос…',waPh:'Вставьте сообщение WhatsApp…',qtPh:'Опишите ситуацию с КП…',asPh:'Опишите проблему…',cePh:'Инфо о целевом клиенте…',exPh:'Название, дата, город выставки…',cfPh:'Детали: PO, товары, кол-во…',shPh:'Трек-номер, перевозчик…',pmPh:'Счёт, сумма, срок…',grPh:'Имя клиента, страна…'},
+  ar:{heroTitle:'ردود أفضل. صفقات أكثر.',heroDesc:'الصق استفسار المشتري. يولد الذكاء الاصطناعي رداً احترافياً مع استراتيجية تفاوض.',stage1:'لصق الاستفسار',stage2:'تحليل الذكاء الاصطناعي',stage3:'الحصول على الرد',inputLabel:'استفسار المشتري',inputHint:'لغة العميل، اكتشاف تلقائي',inputPh:'الصق استفسار المشتري هنا…',loadExample:'عرض مثال',generate:'توليد الرد',generating:'جارٍ التوليد…',outputLang:'لغة الرد',followSystem:'اتباع النظام',resultLabel:'النتيجة',resultPlaceholder:'سيظهر ردك هنا.',copy:'نسخ',save:'حفظ',clear:'مسح',history:'السجل',historyEmpty:'لا يوجد سجل بعد.',historyRestored:'تمت الاستعادة.',settingsTitle:'الإعدادات',settingsTemplate:'قالب الصناعة',settingsChoose:'اختر للتعبئة التلقائية…',settingsProduct:'اسم المنتج',settingsMoq:'الحد الأدنى للطلب',settingsPrice:'سعر FOB',settingsDelivery:'مدة التسليم',settingsCerts:'الشهادات',settingsAdvantage:'الميزة الرئيسية',settingsApiHint:'احصل على مفتاح مجاني من platform.deepseek.com.',cancel:'إلغاء',saveBtn:'حفظ',toastSettingsSaved:'تم حفظ الإعدادات',toastCopied:'تم النسخ',toastSaved:'تم الحفظ',toastDemo:'تم تحميل المثال',toastDemoAuto:'تم تحميل المثال والقالب',toastNeedInquiry:'يرجى لصق الاستفسار أولاً',toastNeedKey:'يرجى ضبط مفتاح API',toastGenerated:'تم توليد الرد!',inquiryReply:'رد على الاستفسار',whatsapp:'رد واتساب',quote:'متابعة التسعير',aftersale:'خدمة ما بعد البيع',coldemail:'بريد بارد',exhibition:'دعوة معرض',confirm:'تأكيد الطلب',shipping:'إشعار الشحن',payment:'تذكير بالدفع',greeting:'تحية',inqPh:'الصق الاستفسار هنا…',waPh:'الصق رسالة واتساب…',qtPh:'صف حالة التسعير…',asPh:'صف المشكلة…',cePh:'معلومات العميل المستهدف…',exPh:'اسم المعرض، التاريخ، المدينة…',cfPh:'تفاصيل: الطلب، المنتجات، الكمية…',shPh:'رقم التتبع، الناقل…',pmPh:'الفاتورة، المبلغ، الاستحقاق…',grPh:'اسم العميل، البلد…'},
+  nl:{heroTitle:'Betere antwoorden. Meer deals.',heroDesc:'Plak de aanvraag. AI genereert een professioneel antwoord met onderhandelingsstrategie.',stage1:'Aanvraag plakken',stage2:'AI analyseert',stage3:'Antwoord krijgen',inputLabel:'Kopersaanvraag',inputHint:'Klanttaal, automatisch herkend',inputPh:'Plak de aanvraag hier…',loadExample:'Voorbeeld bekijken',generate:'Antwoord genereren',generating:'Genereren…',outputLang:'Antwoordtaal',followSystem:'Systeem volgen',resultLabel:'Resultaat',resultPlaceholder:'Je antwoord verschijnt hier.',copy:'Kopiëren',save:'Opslaan',clear:'Wissen',history:'Recent',historyEmpty:'Nog geen geschiedenis.',historyRestored:'Hersteld.',settingsTitle:'Instellingen',settingsTemplate:'Branchesjabloon',settingsChoose:'Kies om in te vullen…',settingsProduct:'Productnaam',settingsMoq:'MOQ',settingsPrice:'FOB-prijs',settingsDelivery:'Levertijd',settingsCerts:'Certificeringen',settingsAdvantage:'Belangrijkste voordeel',settingsApiHint:'Gratis sleutel op platform.deepseek.com.',cancel:'Annuleren',saveBtn:'Opslaan',toastSettingsSaved:'Instellingen opgeslagen',toastCopied:'Gekopieerd',toastSaved:'Opgeslagen',toastDemo:'Voorbeeld geladen',toastDemoAuto:'Voorbeeld en sjabloon geladen',toastNeedInquiry:'Plak eerst een aanvraag',toastNeedKey:'Configureer API-sleutel',toastGenerated:'Antwoord gegenereerd!',inquiryReply:'Aanvraag beantwoorden',whatsapp:'WhatsApp antwoord',quote:'Offerte follow-up',aftersale:'After-sales',coldemail:'Cold email',exhibition:'Beursuitnodiging',confirm:'Orderbevestiging',shipping:'Verzendbericht',payment:'Betalingsherinnering',greeting:'Groet',inqPh:'Plak aanvraag hier…',waPh:'Plak WhatsApp bericht…',qtPh:'Beschrijf offerte situatie…',asPh:'Beschrijf het probleem…',cePh:'Doelklant info…',exPh:'Beursnaam, datum, stad…',cfPh:'Details: PO, producten, aantal…',shPh:'Track & trace, vervoerder…',pmPh:'Factuur, bedrag, vervaldatum…',grPh:'Klantnaam, land…'},
+  pl:{heroTitle:'Lepsze odpowiedzi. Więcej transakcji.',heroDesc:'Wklej zapytanie. AI generuje profesjonalną odpowiedź ze strategią negocjacji.',stage1:'Wklej zapytanie',stage2:'AI analizuje',stage3:'Uzyskaj odpowiedź',inputLabel:'Zapytanie kupującego',inputHint:'Język klienta, wykrywany automatycznie',inputPh:'Wklej zapytanie tutaj…',loadExample:'Zobacz przykład',generate:'Generuj odpowiedź',generating:'Generowanie…',outputLang:'Język odpowiedzi',followSystem:'Zgodnie z systemem',resultLabel:'Wynik',resultPlaceholder:'Twoja odpowiedź pojawi się tutaj.',copy:'Kopiuj',save:'Zapisz',clear:'Wyczyść',history:'Historia',historyEmpty:'Brak historii.',historyRestored:'Przywrócono.',settingsTitle:'Ustawienia',settingsTemplate:'Szablon branżowy',settingsChoose:'Wybierz, aby wypełnić…',settingsProduct:'Nazwa produktu',settingsMoq:'MOQ',settingsPrice:'Cena FOB',settingsDelivery:'Czas dostawy',settingsCerts:'Certyfikaty',settingsAdvantage:'Kluczowa przewaga',settingsApiHint:'Darmowy klucz na platform.deepseek.com.',cancel:'Anuluj',saveBtn:'Zapisz',toastSettingsSaved:'Ustawienia zapisane',toastCopied:'Skopiowano',toastSaved:'Zapisano',toastDemo:'Przykład załadowany',toastDemoAuto:'Przykład i szablon załadowane',toastNeedInquiry:'Najpierw wklej zapytanie',toastNeedKey:'Skonfiguruj klucz API',toastGenerated:'Odpowiedź wygenerowana!',inquiryReply:'Odpowiedź na zapytanie',whatsapp:'Odpowiedź WhatsApp',quote:'Follow-up oferty',aftersale:'Posprzedażowe',coldemail:'Cold email',exhibition:'Zaproszenie na targi',confirm:'Potwierdzenie zamówienia',shipping:'Powiadomienie o wysyłce',payment:'Przypomnienie o płatności',greeting:'Życzenia',inqPh:'Wklej zapytanie…',waPh:'Wklej wiadomość WhatsApp…',qtPh:'Opisz sytuację ofertową…',asPh:'Opisz problem…',cePh:'Info o kliencie docelowym…',exPh:'Nazwa, data, miasto targów…',cfPh:'Szczegóły: PO, produkty, ilość…',shPh:'Numer śledzenia, przewoźnik…',pmPh:'Faktura, kwota, termin…',grPh:'Nazwa klienta, kraj…'},
+  tr:{heroTitle:'Daha iyi yanıtlar. Daha fazla anlaşma.',heroDesc:'Alıcı sorgusunu yapıştırın. AI, müzakere stratejisiyle profesyonel yanıt oluşturur.',stage1:'Sorguyu yapıştır',stage2:'AI analiz eder',stage3:'Yanıtı al',inputLabel:'Alıcı sorgusu',inputHint:'Müşteri dili, otomatik algılanır',inputPh:'Alıcı sorgusunu buraya yapıştırın…',loadExample:'Örneği gör',generate:'Yanıt oluştur',generating:'Oluşturuluyor…',outputLang:'Yanıt dili',followSystem:'Sistemi takip et',resultLabel:'Sonuç',resultPlaceholder:'Yanıtınız burada görünecek.',copy:'Kopyala',save:'Kaydet',clear:'Temizle',history:'Geçmiş',historyEmpty:'Henüz geçmiş yok.',historyRestored:'Geri yüklendi.',settingsTitle:'Ayarlar',settingsTemplate:'Sektör şablonu',settingsChoose:'Otomatik doldurmak için seçin…',settingsProduct:'Ürün adı',settingsMoq:'MOQ',settingsPrice:'FOB Fiyat',settingsDelivery:'Teslim süresi',settingsCerts:'Sertifikalar',settingsAdvantage:'Ana avantaj',settingsApiHint:'platform.deepseek.com\'da ücretsiz anahtar.',cancel:'İptal',saveBtn:'Kaydet',toastSettingsSaved:'Ayarlar kaydedildi',toastCopied:'Kopyalandı',toastSaved:'Kaydedildi',toastDemo:'Örnek yüklendi',toastDemoAuto:'Örnek ve şablon yüklendi',toastNeedInquiry:'Önce bir sorgu yapıştırın',toastNeedKey:'API anahtarını yapılandırın',toastGenerated:'Yanıt oluşturuldu!',inquiryReply:'Sorgu yanıtı',whatsapp:'WhatsApp yanıtı',quote:'Teklif takibi',aftersale:'Satış sonrası',coldemail:'Soğuk e-posta',exhibition:'Fuar daveti',confirm:'Sipariş onayı',shipping:'Kargo bildirimi',payment:'Ödeme hatırlatması',greeting:'Tebrik',inqPh:'Sorguyu buraya yapıştırın…',waPh:'WhatsApp mesajını yapıştırın…',qtPh:'Teklif durumunu açıklayın…',asPh:'Sorunu açıklayın…',cePh:'Hedef müşteri bilgisi…',exPh:'Fuar adı, tarih, şehir…',cfPh:'Detaylar: PO, ürünler, miktar…',shPh:'Takip no, kargo şirketi…',pmPh:'Fatura, tutar, vade…',grPh:'Müşteri adı, ülke…'},
+  vi:{heroTitle:'Phản hồi tốt hơn. Chốt nhiều hợp đồng hơn.',heroDesc:'Dán yêu cầu của người mua. AI tạo phản hồi chuyên nghiệp với chiến lược đàm phán.',stage1:'Dán yêu cầu',stage2:'AI phân tích',stage3:'Nhận phản hồi',inputLabel:'Yêu cầu người mua',inputHint:'Ngôn ngữ khách hàng, tự động phát hiện',inputPh:'Dán yêu cầu vào đây…',loadExample:'Xem ví dụ',generate:'Tạo phản hồi',generating:'Đang tạo…',outputLang:'Ngôn ngữ phản hồi',followSystem:'Theo hệ thống',resultLabel:'Kết quả',resultPlaceholder:'Phản hồi sẽ hiển thị ở đây.',copy:'Sao chép',save:'Lưu',clear:'Xóa',history:'Gần đây',historyEmpty:'Chưa có lịch sử.',historyRestored:'Đã khôi phục.',settingsTitle:'Cài đặt',settingsTemplate:'Mẫu ngành',settingsChoose:'Chọn để tự động điền…',settingsProduct:'Tên sản phẩm',settingsMoq:'MOQ',settingsPrice:'Giá FOB',settingsDelivery:'Thời gian giao hàng',settingsCerts:'Chứng nhận',settingsAdvantage:'Lợi thế chính',settingsApiHint:'Lấy key miễn phí tại platform.deepseek.com.',cancel:'Hủy',saveBtn:'Lưu',toastSettingsSaved:'Đã lưu cài đặt',toastCopied:'Đã sao chép',toastSaved:'Đã lưu',toastDemo:'Đã tải ví dụ',toastDemoAuto:'Đã tải ví dụ và mẫu',toastNeedInquiry:'Vui lòng dán yêu cầu trước',toastNeedKey:'Vui lòng cấu hình API Key',toastGenerated:'Đã tạo phản hồi!',inquiryReply:'Trả lời yêu cầu',whatsapp:'Trả lời WhatsApp',quote:'Theo dõi báo giá',aftersale:'Hậu mãi',coldemail:'Email tiếp cận',exhibition:'Mời triển lãm',confirm:'Xác nhận đơn hàng',shipping:'Thông báo giao hàng',payment:'Nhắc thanh toán',greeting:'Lời chúc',inqPh:'Dán yêu cầu vào đây…',waPh:'Dán tin nhắn WhatsApp…',qtPh:'Mô tả tình hình báo giá…',asPh:'Mô tả vấn đề…',cePh:'Thông tin khách hàng mục tiêu…',exPh:'Tên, ngày, thành phố triển lãm…',cfPh:'Chi tiết: PO, sản phẩm, số lượng…',shPh:'Mã vận đơn, hãng vận chuyển…',pmPh:'Hóa đơn, số tiền, hạn…',grPh:'Tên khách hàng, quốc gia…'},
+  th:{heroTitle:'ตอบกลับที่ดีขึ้น ปิดดีลได้มากขึ้น',heroDesc:'วางคำถามจากผู้ซื้อ AI จะสร้างคำตอบแบบมืออาชีพพร้อมกลยุทธ์การเจรจา',stage1:'วางคำถาม',stage2:'AI วิเคราะห์',stage3:'รับคำตอบ',inputLabel:'คำถามผู้ซื้อ',inputHint:'ภาษาลูกค้า ตรวจพบอัตโนมัติ',inputPh:'วางคำถามผู้ซื้อที่นี่…',loadExample:'ดูตัวอย่าง',generate:'สร้างคำตอบ',generating:'กำลังสร้าง…',outputLang:'ภาษาคำตอบ',followSystem:'ตามระบบ',resultLabel:'ผลลัพธ์',resultPlaceholder:'คำตอบของคุณจะปรากฏที่นี่',copy:'คัดลอก',save:'บันทึก',clear:'ล้าง',history:'ล่าสุด',historyEmpty:'ยังไม่มีประวัติ',historyRestored:'กู้คืนแล้ว',settingsTitle:'ตั้งค่า',settingsTemplate:'เทมเพลตอุตสาหกรรม',settingsChoose:'เลือกเพื่อกรอกอัตโนมัติ…',settingsProduct:'ชื่อสินค้า',settingsMoq:'MOQ',settingsPrice:'ราคา FOB',settingsDelivery:'ระยะเวลาจัดส่ง',settingsCerts:'ใบรับรอง',settingsAdvantage:'จุดเด่น',settingsApiHint:'รับคีย์ฟรีที่ platform.deepseek.com',cancel:'ยกเลิก',saveBtn:'บันทึก',toastSettingsSaved:'บันทึกการตั้งค่าแล้ว',toastCopied:'คัดลอกแล้ว',toastSaved:'บันทึกแล้ว',toastDemo:'โหลดตัวอย่างแล้ว',toastDemoAuto:'โหลดตัวอย่างและเทมเพลตแล้ว',toastNeedInquiry:'กรุณาวางคำถามก่อน',toastNeedKey:'กรุณาตั้งค่า API Key',toastGenerated:'สร้างคำตอบแล้ว!',inquiryReply:'ตอบคำถาม',whatsapp:'ตอบ WhatsApp',quote:'ติดตามใบเสนอราคา',aftersale:'บริการหลังการขาย',coldemail:'อีเมลแนะนำตัว',exhibition:'เชิญร่วมงานแสดงสินค้า',confirm:'ยืนยันคำสั่งซื้อ',shipping:'แจ้งการจัดส่ง',payment:'แจ้งเตือนการชำระเงิน',greeting:'คำอวยพร',inqPh:'วางคำถามที่นี่…',waPh:'วางข้อความ WhatsApp…',qtPh:'อธิบายสถานการณ์ใบเสนอราคา…',asPh:'อธิบายปัญหา…',cePh:'ข้อมูลลูกค้าเป้าหมาย…',exPh:'ชื่องาน วันที่ เมือง…',cfPh:'รายละเอียด: PO, สินค้า, จำนวน…',shPh:'หมายเลขติดตาม, ผู้ให้บริการขนส่ง…',pmPh:'ใบแจ้งหนี้, จำนวนเงิน, กำหนดชำระ…',grPh:'ชื่อลูกค้า, ประเทศ…'},
+  id:{heroTitle:'Balasan lebih baik. Lebih banyak kesepakatan.',heroDesc:'Tempel pertanyaan pembeli. AI menghasilkan balasan profesional dengan strategi negosiasi.',stage1:'Tempel pertanyaan',stage2:'AI menganalisis',stage3:'Dapatkan balasan',inputLabel:'Pertanyaan pembeli',inputHint:'Bahasa pelanggan, terdeteksi otomatis',inputPh:'Tempel pertanyaan di sini…',loadExample:'Lihat contoh',generate:'Hasilkan balasan',generating:'Menghasilkan…',outputLang:'Bahasa balasan',followSystem:'Ikuti sistem',resultLabel:'Hasil',resultPlaceholder:'Balasan Anda akan muncul di sini.',copy:'Salin',save:'Simpan',clear:'Hapus',history:'Terbaru',historyEmpty:'Belum ada riwayat.',historyRestored:'Dipulihkan.',settingsTitle:'Pengaturan',settingsTemplate:'Template industri',settingsChoose:'Pilih untuk mengisi otomatis…',settingsProduct:'Nama produk',settingsMoq:'MOQ',settingsPrice:'Harga FOB',settingsDelivery:'Waktu pengiriman',settingsCerts:'Sertifikasi',settingsAdvantage:'Keunggulan utama',settingsApiHint:'Dapatkan kunci gratis di platform.deepseek.com.',cancel:'Batal',saveBtn:'Simpan',toastSettingsSaved:'Pengaturan disimpan',toastCopied:'Disalin',toastSaved:'Disimpan',toastDemo:'Contoh dimuat',toastDemoAuto:'Contoh dan template dimuat',toastNeedInquiry:'Tempel pertanyaan terlebih dahulu',toastNeedKey:'Atur API Key di Pengaturan',toastGenerated:'Balasan dihasilkan!',inquiryReply:'Balas pertanyaan',whatsapp:'Balas WhatsApp',quote:'Tindak lanjut penawaran',aftersale:'Purna jual',coldemail:'Email dingin',exhibition:'Undangan pameran',confirm:'Konfirmasi pesanan',shipping:'Pemberitahuan pengiriman',payment:'Pengingat pembayaran',greeting:'Ucapan',inqPh:'Tempel pertanyaan…',waPh:'Tempel pesan WhatsApp…',qtPh:'Jelaskan situasi penawaran…',asPh:'Jelaskan masalahnya…',cePh:'Info pelanggan target…',exPh:'Nama, tanggal, kota pameran…',cfPh:'Detail: PO, produk, jumlah…',shPh:'No. resi, kurir…',pmPh:'Faktur, jumlah, jatuh tempo…',grPh:'Nama pelanggan, negara…'},
+  hi:{heroTitle:'बेहतर जवाब। ज्यादा डील।',heroDesc:'खरीदार की पूछताछ पेस्ट करें। AI बातचीत रणनीति के साथ पेशेवर जवाब तैयार करता है।',stage1:'पूछताछ पेस्ट करें',stage2:'AI विश्लेषण',stage3:'जवाब पाएं',inputLabel:'खरीदार की पूछताछ',inputHint:'ग्राहक की भाषा, स्वतः पहचान',inputPh:'खरीदार की पूछताछ यहां पेस्ट करें…',loadExample:'उदाहरण देखें',generate:'जवाब बनाएं',generating:'बन रहा है…',outputLang:'जवाब की भाषा',followSystem:'सिस्टम का पालन करें',resultLabel:'परिणाम',resultPlaceholder:'आपका जवाब यहां दिखेगा।',copy:'कॉपी करें',save:'सेव करें',clear:'साफ करें',history:'हालिया',historyEmpty:'अभी कोई इतिहास नहीं।',historyRestored:'पुनर्स्थापित।',settingsTitle:'सेटिंग्स',settingsTemplate:'उद्योग टेम्पलेट',settingsChoose:'चुनकर भरें…',settingsProduct:'उत्पाद का नाम',settingsMoq:'MOQ',settingsPrice:'FOB मूल्य',settingsDelivery:'डिलीवरी समय',settingsCerts:'प्रमाणन',settingsAdvantage:'मुख्य लाभ',settingsApiHint:'platform.deepseek.com पर मुफ्त कुंजी प्राप्त करें।',cancel:'रद्द करें',saveBtn:'सेव करें',toastSettingsSaved:'सेटिंग्स सेव हो गई',toastCopied:'कॉपी हो गया',toastSaved:'सेव हो गया',toastDemo:'उदाहरण लोड हुआ',toastDemoAuto:'उदाहरण और टेम्पलेट लोड हुआ',toastNeedInquiry:'पहले पूछताछ पेस्ट करें',toastNeedKey:'कृपया API की सेट करें',toastGenerated:'जवाब तैयार!',inquiryReply:'पूछताछ का जवाब',whatsapp:'WhatsApp जवाब',quote:'कोटेशन फॉलो-अप',aftersale:'आफ्टर-सेल्स',coldemail:'कोल्ड ईमेल',exhibition:'प्रदर्शनी निमंत्रण',confirm:'ऑर्डर पुष्टि',shipping:'शिपिंग सूचना',payment:'भुगतान अनुस्मारक',greeting:'शुभकामना',inqPh:'पूछताछ यहां पेस्ट करें…',waPh:'WhatsApp संदेश पेस्ट करें…',qtPh:'कोटेशन स्थिति बताएं…',asPh:'समस्या बताएं…',cePh:'लक्षित ग्राहक जानकारी…',exPh:'प्रदर्शनी का नाम, तारीख, शहर…',cfPh:'विवरण: PO, उत्पाद, मात्रा…',shPh:'ट्रैकिंग नंबर, वाहक…',pmPh:'चालान, राशि, देय तिथि…',grPh:'ग्राहक का नाम, देश…'},
+  bn:{heroTitle:'আরও ভালো উত্তর। আরও বেশি ডিল।',heroDesc:'ক্রেতার অনুসন্ধান পেস্ট করুন। এআই সমঝোতা কৌশলসহ পেশাদার উত্তর তৈরি করে।',stage1:'অনুসন্ধান পেস্ট',stage2:'এআই বিশ্লেষণ',stage3:'উত্তর পান',inputLabel:'ক্রেতার অনুসন্ধান',inputHint:'গ্রাহকের ভাষা, স্বয়ংক্রিয় সনাক্ত',inputPh:'ক্রেতার অনুসন্ধান এখানে পেস্ট করুন…',loadExample:'উদাহরণ দেখুন',generate:'উত্তর তৈরি করুন',generating:'তৈরি হচ্ছে…',outputLang:'উত্তরের ভাষা',followSystem:'সিস্টেম অনুসরণ',resultLabel:'ফলাফল',resultPlaceholder:'আপনার উত্তর এখানে দেখাবে।',copy:'কপি',save:'সংরক্ষণ',clear:'মুছুন',history:'সাম্প্রতিক',historyEmpty:'এখনও কোনো ইতিহাস নেই।',historyRestored:'পুনরুদ্ধার করা হয়েছে।',settingsTitle:'সেটিংস',settingsTemplate:'শিল্প টেমপ্লেট',settingsChoose:'পূরণ করতে নির্বাচন করুন…',settingsProduct:'পণ্যের নাম',settingsMoq:'MOQ',settingsPrice:'FOB মূল্য',settingsDelivery:'ডেলিভারি সময়',settingsCerts:'সার্টিফিকেশন',settingsAdvantage:'মূল সুবিধা',settingsApiHint:'platform.deepseek.com এ বিনামূল্যে কী নিন।',cancel:'বাতিল',saveBtn:'সংরক্ষণ',toastSettingsSaved:'সেটিংস সংরক্ষিত',toastCopied:'কপি করা হয়েছে',toastSaved:'সংরক্ষিত',toastDemo:'উদাহরণ লোড হয়েছে',toastDemoAuto:'উদাহরণ ও টেমপ্লেট লোড হয়েছে',toastNeedInquiry:'প্রথমে অনুসন্ধান পেস্ট করুন',toastNeedKey:'API কী সেট করুন',toastGenerated:'উত্তর তৈরি হয়েছে!',inquiryReply:'অনুসন্ধানের উত্তর',whatsapp:'হোয়াটসঅ্যাপ উত্তর',quote:'কোটেশন ফলো-আপ',aftersale:'বিক্রয়োত্তর',coldemail:'কোল্ড ইমেইল',exhibition:'প্রদর্শনী আমন্ত্রণ',confirm:'অর্ডার নিশ্চিতকরণ',shipping:'চালান বিজ্ঞপ্তি',payment:'পেমেন্ট রিমাইন্ডার',greeting:'শুভেচ্ছা',inqPh:'অনুসন্ধান এখানে পেস্ট করুন…',waPh:'হোয়াটসঅ্যাপ বার্তা পেস্ট করুন…',qtPh:'কোটেশন পরিস্থিতি বর্ণনা করুন…',asPh:'সমস্যা বর্ণনা করুন…',cePh:'লক্ষ্য গ্রাহকের তথ্য…',exPh:'প্রদর্শনীর নাম, তারিখ, শহর…',cfPh:'বিস্তারিত: PO, পণ্য, পরিমাণ…',shPh:'ট্র্যাকিং নম্বর, ক্যারিয়ার…',pmPh:'ইনভয়েস, পরিমাণ, নির্ধারিত তারিখ…',grPh:'গ্রাহকের নাম, দেশ…'},
+  ms:{heroTitle:'Balasan lebih baik. Lebih banyak tawaran.',heroDesc:'Tampal pertanyaan pembeli. AI menjana balasan profesional dengan strategi rundingan.',stage1:'Tampal pertanyaan',stage2:'AI analisis',stage3:'Dapatkan balasan',inputLabel:'Pertanyaan pembeli',inputHint:'Bahasa pelanggan, dikesan automatik',inputPh:'Tampal pertanyaan di sini…',loadExample:'Lihat contoh',generate:'Jana balasan',generating:'Menjana…',outputLang:'Bahasa balasan',followSystem:'Ikut sistem',resultLabel:'Hasil',resultPlaceholder:'Balasan anda akan dipaparkan di sini.',copy:'Salin',save:'Simpan',clear:'Kosongkan',history:'Terkini',historyEmpty:'Tiada sejarah lagi.',historyRestored:'Dipulihkan.',settingsTitle:'Tetapan',settingsTemplate:'Templat industri',settingsChoose:'Pilih untuk isi automatik…',settingsProduct:'Nama produk',settingsMoq:'MOQ',settingsPrice:'Harga FOB',settingsDelivery:'Masa penghantaran',settingsCerts:'Pensijilan',settingsAdvantage:'Kelebihan utama',settingsApiHint:'Dapatkan kunci percuma di platform.deepseek.com.',cancel:'Batal',saveBtn:'Simpan',toastSettingsSaved:'Tetapan disimpan',toastCopied:'Disalin',toastSaved:'Disimpan',toastDemo:'Contoh dimuatkan',toastDemoAuto:'Contoh dan templat dimuatkan',toastNeedInquiry:'Sila tampal pertanyaan dahulu',toastNeedKey:'Sila tetapkan Kunci API',toastGenerated:'Balasan dijana!',inquiryReply:'Balas pertanyaan',whatsapp:'Balas WhatsApp',quote:'Susulan sebut harga',aftersale:'Selepas jualan',coldemail:'Emel dingin',exhibition:'Jemputan pameran',confirm:'Pengesahan pesanan',shipping:'Notis penghantaran',payment:'Peringatan bayaran',greeting:'Ucapan',inqPh:'Tampal pertanyaan…',waPh:'Tampal mesej WhatsApp…',qtPh:'Huraikan situasi sebut harga…',asPh:'Huraikan masalah…',cePh:'Maklumat pelanggan sasaran…',exPh:'Nama, tarikh, bandar pameran…',cfPh:'Butiran: PO, produk, kuantiti…',shPh:'No. penjejakan, pembawa…',pmPh:'Invois, jumlah, tarikh akhir…',grPh:'Nama pelanggan, negara…'},
+  fa:{heroTitle:'پاسخ‌های بهتر. معاملات بیشتر.',heroDesc:'درخواست خریدار را بچسبانید. هوش مصنوعی پاسخی حرفه‌ای با استراتژی مذاکره تولید می‌کند.',stage1:'چسباندن درخواست',stage2:'تحلیل هوش مصنوعی',stage3:'دریافت پاسخ',inputLabel:'درخواست خریدار',inputHint:'زبان مشتری، تشخیص خودکار',inputPh:'درخواست خریدار را اینجا بچسبانید…',loadExample:'مشاهده مثال',generate:'تولید پاسخ',generating:'در حال تولید…',outputLang:'زبان پاسخ',followSystem:'پیروی از سیستم',resultLabel:'نتیجه',resultPlaceholder:'پاسخ شما اینجا نمایش داده می‌شود.',copy:'کپی',save:'ذخیره',clear:'پاک کردن',history:'اخیر',historyEmpty:'هنوز تاریخی وجود ندارد.',historyRestored:'بازگردانی شد.',settingsTitle:'تنظیمات',settingsTemplate:'قالب صنعت',settingsChoose:'برای تکمیل خودکار انتخاب کنید…',settingsProduct:'نام محصول',settingsMoq:'حداقل سفارش',settingsPrice:'قیمت FOB',settingsDelivery:'زمان تحویل',settingsCerts:'گواهینامه‌ها',settingsAdvantage:'مزیت کلیدی',settingsApiHint:'کلید رایگان در platform.deepseek.com دریافت کنید.',cancel:'لغو',saveBtn:'ذخیره',toastSettingsSaved:'تنظیمات ذخیره شد',toastCopied:'کپی شد',toastSaved:'ذخیره شد',toastDemo:'مثال بارگذاری شد',toastDemoAuto:'مثال و قالب بارگذاری شد',toastNeedInquiry:'لطفاً ابتدا درخواست را بچسبانید',toastNeedKey:'لطفاً کلید API را تنظیم کنید',toastGenerated:'پاسخ تولید شد!',inquiryReply:'پاسخ به درخواست',whatsapp:'پاسخ واتساپ',quote:'پیگیری قیمت',aftersale:'پس از فروش',coldemail:'ایمیل سرد',exhibition:'دعوت به نمایشگاه',confirm:'تأیید سفارش',shipping:'اطلاعیه ارسال',payment:'یادآوری پرداخت',greeting:'تبریک',inqPh:'درخواست را اینجا بچسبانید…',waPh:'پیام واتساپ را بچسبانید…',qtPh:'وضعیت قیمت را توضیح دهید…',asPh:'مشکل را توضیح دهید…',cePh:'اطلاعات مشتری هدف…',exPh:'نام، تاریخ، شهر نمایشگاه…',cfPh:'جزئیات: PO، محصولات، تعداد…',shPh:'شماره پیگیری، شرکت حمل‌ونقل…',pmPh:'فاکتور، مبلغ، سررسید…',grPh:'نام مشتری، کشور…'}
+	};
+
+const EMAIL_TYPES = [
+  {id:'inquiry',tk:'inquiryReply',pk:'inqPh',sys:'You are a senior foreign trade expert. Structure your reply:\n1. [Analysis] Buyer type, real needs, risks (2-3 lines)\n2. [Email] Professional reply: thank→answer each question→extra value→clear next step. 200-300 words.\n3. [Strategy] 2-3 actionable tips.'},
+  {id:'whatsapp',tk:'whatsapp',pk:'waPh',sys:'Reply on WhatsApp. 2-4 lines. No "Dear". Price inquiry→FOB+MOQ+lead time. End with low-pressure next step. Add "Strategy:" line.'},
+  {id:'quote',tk:'quote',pk:'qtPh',sys:'Follow up on an unanswered quote. 1 email 120-180 words: value first (insight/case), then gently ask. Add 1 strategy note.'},
+  {id:'aftersale',tk:'aftersale',pk:'asPh',sys:'Handle complaint. 1 email 200-300 words: acknowledge→2-3 solutions→timeline. Add 1 retention note.'},
+  {id:'coldemail',tk:'coldemail',pk:'cePh',sys:'Cold outreach. Subject≤8 words, no "supplier". First line=pain point. 120-180 words. 3 follow-ups (Day3/7/14).'},
+  {id:'exhibition',tk:'exhibition',pk:'exPh',sys:'Invite to exhibition. 1 email 150-200 words: past contact→event+booth→why visit→booking placeholder.'},
+  {id:'confirm',tk:'confirm',pk:'cfPh',sys:'Order confirmation. 1 email 150-200 words: thank→order summary→next milestones. Clean and reassuring.'},
+  {id:'shipping',tk:'shipping',pk:'shPh',sys:'Shipping notice. 1 email 100-150 words: shipped+tracking→ETA→customs note→packing summary.'},
+  {id:'payment',tk:'payment',pk:'pmPh',sys:'Payment reminder. 1 email 120-180 words. 1st=friendly. Mention past cooperation first. Add 1 strategy note.'},
+  {id:'greeting',tk:'greeting',pk:'grPh',sys:'Holiday greeting. 1 email 80-120 words: mention specific cooperation detail. Warm, not cheesy. No business talk.'}
+];
+
+const TEMPLATES = {
+  lock:{product:'智能门锁 BL-200',moq:'100 个',price:'$28-35/个',delivery:'15-25 天',certs:'CE, FCC, RoHS',advantage:'10 年智能锁制造经验，出口 20+ 国家'},
+  earbuds:{product:'TWS 蓝牙耳机 Pro',moq:'500 个',price:'$8-15/个',delivery:'15-20 天',certs:'CE, FCC, RoHS, REACH',advantage:'深圳 8 年 TWS 研发，支持 ODM/OEM'},
+  cnc:{product:'CNC 精密铝件',moq:'50 个',price:'$5-50/个',delivery:'7-14 天',certs:'ISO 9001, ISO 13485',advantage:'50 台 5 轴 CNC，特斯拉/博世供应链'},
+  tshirt:{product:'定制纯棉 T 恤',moq:'500 件',price:'$2.5-4.5/件',delivery:'20-30 天',certs:'OEKO-TEX, GOTS',advantage:'自有 200 台缝纫机，月产能 50 万件'},
+  furniture:{product:'实木餐桌套装',moq:'50 套',price:'$80-150/套',delivery:'25-35 天',certs:'FSC, CARB Phase 2',advantage:'20 年家具出口经验，自有林地'}
+};
+
+const LANGS = [
+  {c:'zh-CN',n:'中文（简体）',native:'中文（简体）',f:'🇨🇳'},
+  {c:'zh-TW',n:'中文（繁體）',native:'中文（繁體）',f:'🇹🇼'},
+  {c:'en',n:'English',native:'English',f:'🇬🇧'},
+  {c:'ja',n:'Japanese',native:'日本語',f:'🇯🇵'},
+  {c:'ko',n:'Korean',native:'한국어',f:'🇰🇷'},
+  {c:'es',n:'Spanish',native:'Español',f:'🇪🇸'},
+  {c:'fr',n:'French',native:'Français',f:'🇫🇷'},
+  {c:'de',n:'German',native:'Deutsch',f:'🇩🇪'},
+  {c:'pt',n:'Portuguese',native:'Português',f:'🇧🇷'},
+  {c:'it',n:'Italian',native:'Italiano',f:'🇮🇹'},
+  {c:'ru',n:'Russian',native:'Русский',f:'🇷🇺'},
+  {c:'ar',n:'Arabic',native:'العربية',f:'🇸🇦'},
+  {c:'nl',n:'Dutch',native:'Nederlands',f:'🇳🇱'},
+  {c:'pl',n:'Polish',native:'Polski',f:'🇵🇱'},
+  {c:'tr',n:'Turkish',native:'Türkçe',f:'🇹🇷'},
+  {c:'vi',n:'Vietnamese',native:'Tiếng Việt',f:'🇻🇳'},
+  {c:'th',n:'Thai',native:'ภาษาไทย',f:'🇹🇭'},
+  {c:'id',n:'Indonesian',native:'Bahasa Indonesia',f:'🇮🇩'},
+  {c:'hi',n:'Hindi',native:'हिन्दी',f:'🇮🇳'},
+  {c:'bn',n:'Bengali',native:'বাংলা',f:'🇧🇩'},
+  {c:'ms',n:'Malay',native:'Bahasa Melayu',f:'🇲🇾'},
+  {c:'fa',n:'Persian',native:'فارسی',f:'🇮🇷'},
+  {c:'ur',n:'Urdu',native:'اردو',f:'🇵🇰'},
+  {c:'sw',n:'Swahili',native:'Kiswahili',f:'🇰🇪'},
+  {c:'fil',n:'Filipino',native:'Filipino',f:'🇵🇭'},
+  {c:'he',n:'Hebrew',native:'עברית',f:'🇮🇱'},
+  {c:'el',n:'Greek',native:'Ελληνικά',f:'🇬🇷'},
+  {c:'cs',n:'Czech',native:'Čeština',f:'🇨🇿'},
+  {c:'sv',n:'Swedish',native:'Svenska',f:'🇸🇪'},
+  {c:'da',n:'Danish',native:'Dansk',f:'🇩🇰'},
+  {c:'fi',n:'Finnish',native:'Suomi',f:'🇫🇮'},
+  {c:'no',n:'Norwegian',native:'Norsk',f:'🇳🇴'},
+  {c:'hu',n:'Hungarian',native:'Magyar',f:'🇭🇺'},
+  {c:'ro',n:'Romanian',native:'Română',f:'🇷🇴'},
+  {c:'uk',n:'Ukrainian',native:'Українська',f:'🇺🇦'},
+  {c:'bg',n:'Bulgarian',native:'Български',f:'🇧🇬'}
+];
+function buildSysLangOptions(){D.sl.innerHTML='';LANGS.forEach(l=>{const o=document.createElement('option');o.value=l.c;o.textContent=l.f+' '+l.native;if(l.c===S.sysLang)o.selected=true;D.sl.appendChild(o);});}
+function buildOutLangOptions(){D.ol.innerHTML='';const o=document.createElement('option');o.value='system';o.textContent='🔄 '+t('followSystem');if(S.outLang==='system')o.selected=true;D.ol.appendChild(o);LANGS.forEach(l=>{const op=document.createElement('option');op.value=l.c;op.textContent=l.f+' '+l.native;if(l.c===S.outLang)op.selected=true;D.ol.appendChild(op);});}
+
+let S = {type:'inquiry',sysLang:'zh-CN',outLang:'system',result:'',inquiry:''};
+const $=id=>document.getElementById(id);
+let D={};
+
+function t(key){const lang=T[S.sysLang]?S.sysLang:'en';return T[lang][key]||T['en'][key]||key;}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  D.ts=$('typeStrip');D.ti=$('inquiryInput');D.il=$('inputLabel');D.ih=$('inputHint');
+  D.db=$('demoBtn');D.bg=$('btnGenerate');D.bt=$('btnText');D.rp=$('resultPanel');
+  D.cp=$('copyBtn');D.sv=$('saveBtn');D.cl=$('clearBtn');D.hg=$('historyGrid');
+  D.sl=$('sysLang');D.ol=$('outputLang');D.tb=$('themeBtn');
+  D.sb=$('settingsBtn');D.sm=$('settingsModal');D.tm=$('templateSelect');
+  D.mc=$('modalCancel');D.ms=$('modalSave');D.to=$('toast');
+
+  S.sysLang=localStorage.getItem('tm_sysLang')||'zh-CN';
+  S.type=localStorage.getItem('tm_type')||'inquiry';
+  S.outLang=localStorage.getItem('tm_outLang')||'system';
+
+  buildSysLangOptions();
+  buildOutLangOptions();
+
+  D.db.addEventListener('click',loadDemo);
+  D.bg.addEventListener('click',generate);
+  D.cp.addEventListener('click',()=>{navigator.clipboard.writeText(S.result).then(()=>toast(t('toastCopied')));});
+  D.sv.addEventListener('click',saveResult);
+  D.cl.addEventListener('click',clearResult);
+  D.af=$('addFollowupBtn');D.fl=$('followupList');D.sc=$('statsCards');D.ct=$('chartTypes');D.cl2=$('chartLangs');
+  D.af.addEventListener('click',addToFollowups);
+  D.sl.addEventListener('change',()=>{S.sysLang=D.sl.value;localStorage.setItem('tm_sysLang',S.sysLang);applyI18n();buildOutLangOptions();});
+  D.ol.addEventListener('change',()=>{S.outLang=D.ol.value;localStorage.setItem('tm_outLang',S.outLang);});
+  D.tb.addEventListener('click',toggleTheme);
+  D.sb.addEventListener('click',openSettings);
+  D.mc.addEventListener('click',closeSettings);
+  D.ms.addEventListener('click',saveSettings);
+  D.tm.addEventListener('change',applyTemplate);
+  D.sm.addEventListener('click',e=>{if(e.target===D.sm)closeSettings();});
+
+  renderTypes();loadHistory();renderDashboard();renderFollowups();initTheme();applyI18n();
+});
+
+function applyI18n(){
+  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.getAttribute('data-t')));
+  document.querySelectorAll('[data-t-placeholder]').forEach(el=>el.placeholder=t(el.getAttribute('data-t-placeholder')));
+  const tObj=EMAIL_TYPES.find(e=>e.id===S.type);
+  D.ti.placeholder=t(tObj.pk);
+  renderTypes();
+  loadHistory();renderDashboard();renderFollowups();
+  if(!D.bg.disabled)D.bt.textContent=t('generate');
+}
+
+function renderTypes(){
+  D.ts.innerHTML='';
+  EMAIL_TYPES.forEach(e=>{
+    const el=document.createElement('span');
+    el.className='type-pill'+(e.id===S.type?' active':'');
+    el.textContent=t(e.tk);
+    el.addEventListener('click',()=>{S.type=e.id;localStorage.setItem('tm_type',e.id);renderTypes();D.ti.placeholder=t(e.pk);clearResult();});
+    D.ts.appendChild(el);
+  });
+}
+
+async function generate(){
+  const input=D.ti.value.trim();
+  if(!input)return toast(t('toastNeedInquiry'));
+  const apiKey=localStorage.getItem('tm_apiKey');
+  if(!apiKey){toast(t('toastNeedKey'));openSettings();return;}
+
+  D.bg.disabled=true;D.bt.textContent=t('generating');
+  D.rp.textContent='';D.rp.className='result-panel loading';
+  setStage(2);
+
+  try{
+    const et=EMAIL_TYPES.find(e=>e.id===S.type);
+    const info=buildInfo();
+    const outLang=S.outLang==='system'?S.sysLang:S.outLang;
+    const l=LANGS.find(x=>x.c===outLang);
+    const langName=l?l.native+' ('+l.n+')':outLang;
+    const langInst='YOU MUST write the entire reply in '+langName+'. This overrides everything else.';
+    const sys=et.sys+'\n\n=== OUTPUT LANGUAGE (ABSOLUTE REQUIREMENT) ===\n'+langInst;
+    const usr='Product Info:\n'+info+'\n\nInquiry (auto-detect the language, but reply in '+langName+'):\n'+input;
+
+    const resp=await fetch('https://api.deepseek.com/v1/chat/completions',{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:sys},{role:'user',content:usr}],temperature:0.3,max_tokens:2048})
+    });
+    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||'API error');}
+    const d=await resp.json();
+    S.result=d.choices[0].message.content;S.inquiry=input;
+    D.rp.textContent=S.result;D.rp.className='result-panel';
+    D.cp.style.display='inline-flex';D.sv.style.display='inline-flex';D.cl.style.display='inline-flex';D.af.style.display='inline-flex';
+    setStage(3);toast(t('toastGenerated'));
+    trackUsage(S.type,S.lang);renderDashboard();
+  }catch(e){
+    D.rp.textContent='Error: '+e.message;D.rp.className='result-panel error';setStage(1);
+  }finally{
+    D.bg.disabled=false;D.bt.textContent=t('generate');
+  }
+}
+function setStage(n){['stg1','stg2','stg3'].forEach((s,i)=>$(s).className='stage'+(i+1<n?' done':'')+(i+1===n?' active':''));}
+
+function saveResult(){
+  const h=JSON.parse(localStorage.getItem('tm_history')||'[]');
+  const et=EMAIL_TYPES.find(e=>e.id===S.type);
+  h.unshift({id:Date.now(),type:t(et.tk),typeId:S.type,inquiry:S.inquiry.substring(0,200),lang:S.outLang==='system'?S.sysLang:S.outLang,time:Date.now()});
+  if(h.length>50)h.length=50;
+  localStorage.setItem('tm_history',JSON.stringify(h));loadHistory();toast(t('toastSaved'));
+}
+function clearResult(){
+  S.result='';S.inquiry='';D.rp.textContent=t('resultPlaceholder');D.rp.className='result-panel';
+  D.cp.style.display='none';D.sv.style.display='none';D.cl.style.display='none';D.af.style.display='none';setStage(1);
+}
+
+// --- USAGE TRACKING ---
+function trackUsage(type,lang){
+  const d=new Date();const k=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');
+  const daily=JSON.parse(localStorage.getItem('tm_daily')||'{}');daily[k]=(daily[k]||0)+1;localStorage.setItem('tm_daily',JSON.stringify(daily));
+  const types=JSON.parse(localStorage.getItem('tm_types')||'{}');types[type]=(types[type]||0)+1;localStorage.setItem('tm_types',JSON.stringify(types));
+  const langs=JSON.parse(localStorage.getItem('tm_langs')||'{}');langs[lang]=(langs[lang]||0)+1;localStorage.setItem('tm_langs',JSON.stringify(langs));
+  localStorage.setItem('tm_usage',(parseInt(localStorage.getItem('tm_usage')||'0')+1).toString());
+}
+
+// --- DASHBOARD ---
+function renderDashboard(){
+  const total=parseInt(localStorage.getItem('tm_usage')||'0');
+  const daily=JSON.parse(localStorage.getItem('tm_daily')||'{}');
+  const types=JSON.parse(localStorage.getItem('tm_types')||'{}');
+  const langs=JSON.parse(localStorage.getItem('tm_langs')||'{}');
+  const followups=JSON.parse(localStorage.getItem('tm_followups')||'[]');
+  const activeFollowups=followups.filter(f=>!f.done).length;
+  let thisWeek=0;const now=new Date();
+  for(let i=0;i<7;i++){const d=new Date(now);d.setDate(d.getDate()-i);const k=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');thisWeek+=daily[k]||0;}
+  D.sc.innerHTML='<div class="stat-card"><div class="num">'+total+'</div><div class="lbl">'+t('totalEmails')+'</div></div><div class="stat-card"><div class="num">'+thisWeek+'</div><div class="lbl">'+t('thisWeek')+'</div></div><div class="stat-card"><div class="num">'+activeFollowups+'</div><div class="lbl">'+t('activeFollowups')+'</div></div>';
+  const typeNames={inquiry:t('inquiryReply'),whatsapp:t('whatsapp'),quote:t('quote'),aftersale:t('aftersale'),coldemail:t('coldemail'),exhibition:t('exhibition'),confirm:t('confirm'),shipping:t('shipping'),payment:t('payment'),greeting:t('greeting')};
+  const maxT=Math.max(1,...Object.values(types));let th='';for(const[k,v]of Object.entries(types))th+='<div class="bar-row"><span class="bar-lbl">'+(typeNames[k]||k)+'</span><div class="bar-track"><div class="bar-fill" style="width:'+(v/maxT*100)+'%"></div></div></div>';
+  D.ct.innerHTML=th||'<span style="color:var(--text3);font-size:12px;">-</span>';
+  const maxL=Math.max(1,...Object.values(langs));let lh='';for(const[k,v]of Object.entries(langs))lh+='<div class="bar-row"><span class="bar-lbl">'+k+'</span><div class="bar-track"><div class="bar-fill" style="width:'+(v/maxL*100)+'%"></div></div></div>';
+  D.cl2.innerHTML=lh||'<span style="color:var(--text3);font-size:12px;">-</span>';
+}
+
+// --- FOLLOW-UPS ---
+function renderFollowups(){
+  const followups=JSON.parse(localStorage.getItem('tm_followups')||'[]');
+  if(!followups.length){D.fl.innerHTML='<p style="color:var(--text3);font-size:13px;">'+t('noFollowups')+'</p>';return;}
+  D.fl.innerHTML=followups.map((f,i)=>{const overdue=f.due<Date.now()&&!f.done;const ds=new Date(f.due).toLocaleDateString();return '<div class="followup-item'+(overdue?' overdue':'')+'"><div class="fu-info"><div class="fu-title">'+esc(f.title)+'</div><div class="fu-date">'+ds+(f.done?' ✓':'')+'</div></div><div class="fu-actions">'+(!f.done?'<button class="btn btn-ghost" onclick="doneFollowup('+i+')">✓</button>':'')+'<button class="btn btn-ghost" onclick="delFollowup('+i+')">✕</button></div></div>';}).join('');
+}
+function addToFollowups(){
+  if(!S.result)return;
+  const days=parseInt(prompt('跟进天数？（默认3天）','3'))||3;
+  const followups=JSON.parse(localStorage.getItem('tm_followups')||'[]');
+  followups.push({title:S.inquiry.substring(0,60),due:Date.now()+days*86400000,done:false,time:Date.now()});
+  localStorage.setItem('tm_followups',JSON.stringify(followups));
+  renderFollowups();renderDashboard();toast(t('followupAdded'));
+}
+function doneFollowup(i){const f=JSON.parse(localStorage.getItem('tm_followups')||'[]');if(f[i]){f[i].done=true;localStorage.setItem('tm_followups',JSON.stringify(f));renderFollowups();renderDashboard();toast(t('followupDone'));}}
+function delFollowup(i){const f=JSON.parse(localStorage.getItem('tm_followups')||'[]');f.splice(i,1);localStorage.setItem('tm_followups',JSON.stringify(f));renderFollowups();renderDashboard();}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function loadHistory(){
+  const h=JSON.parse(localStorage.getItem('tm_history')||'[]');
+  D.hg.innerHTML='';
+  if(!h.length){D.hg.innerHTML='<p style="color:var(--text3);font-size:13px;">'+t('historyEmpty')+'</p>';return;}
+  h.slice(0,12).forEach(item=>{
+    const card=document.createElement('div');card.className='history-card';
+    const ago=Date.now()-item.time<36e5?Math.floor((Date.now()-item.time)/6e4)+'m ago':Date.now()-item.time<864e5?Math.floor((Date.now()-item.time)/36e5)+'h ago':Math.floor((Date.now()-item.time)/864e5)+'d ago';
+    const safe=document.createElement('span');safe.textContent=item.inquiry;
+    card.innerHTML='<div class="hc-type">'+item.type+'</div><div class="hc-title"></div><div class="hc-meta">'+ago+' · '+item.lang+'</div>';
+    card.querySelector('.hc-title').appendChild(safe);
+    card.addEventListener('click',()=>{
+      S.type=item.typeId||'inquiry';localStorage.setItem('tm_type',S.type);
+      renderTypes();D.ti.placeholder=t(EMAIL_TYPES.find(e=>e.id===S.type).pk);
+      clearResult();D.ti.value=item.inquiry;D.ti.scrollIntoView({behavior:'smooth'});
+      toast(t('historyRestored'));
+    });
+    D.hg.appendChild(card);
+  });
+}
+
+function buildInfo(){
+  const f=[['Product','tm_product'],['MOQ','tm_moq'],['FOB Price','tm_price'],['Delivery','tm_delivery'],['Certifications','tm_certs'],['Advantage','tm_advantage']];
+  let s='';f.forEach(([l,k])=>{const v=localStorage.getItem(k);if(v)s+='- '+l+': '+v+'\n';});
+  return s||'(No product info set)';
+}
+function applyTemplate(){
+  const k=D.tm.value;if(!k||!TEMPLATES[k])return;
+  const t=TEMPLATES[k];
+  $('setProduct').value=t.product;$('setMoq').value=t.moq;$('setPrice').value=t.price;
+  $('setDelivery').value=t.delivery;$('setCerts').value=t.certs;$('setAdvantage').value=t.advantage;
+}
+function loadForm(){
+  ['product','moq','price','delivery','certs','advantage','apiKey'].forEach(f=>{
+    const v=localStorage.getItem('tm_'+f);const el=$('set'+f.charAt(0).toUpperCase()+f.slice(1));if(el&&v!==null)el.value=v;
+  });
+}
+function saveSettings(){
+  ['product','moq','price','delivery','certs','advantage','apiKey'].forEach(f=>{
+    const el=$('set'+f.charAt(0).toUpperCase()+f.slice(1));if(el)localStorage.setItem('tm_'+f,el.value);
+  });
+  closeSettings();toast(t('toastSettingsSaved'));
+}
+function openSettings(){loadForm();D.sm.classList.add('show');}
+function closeSettings(){D.sm.classList.remove('show');}
+
+function initTheme(){const s=localStorage.getItem('tm_theme')||'light';document.documentElement.setAttribute('data-theme',s);D.tb.textContent=s==='light'?'☀':'☾';}
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme'),n=c==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',n);D.tb.textContent=n==='light'?'☀':'☾';localStorage.setItem('tm_theme',n);}
+
+function loadDemo(){
+  D.ti.value='Subject: Inquiry about Bluetooth Door Lock\n\nHello,\n\nI came across your Bluetooth door lock on Alibaba. We are a distributor of smart home products in Spain, supplying to retail chains and online platforms.\n\nI have a few questions:\n1. What is the MOQ and unit price?\n2. Is the Bluetooth compatible with iOS and Android?\n3. What certifications do you have for EU market?\n4. Can you do private labeling with our brand?\n\nWe\'re looking at a trial order of 200-300 units. Annual volume could be 5000-10000 units.\n\nBest regards,\nCarlos Mendez\nSmartLiving Distribution, Barcelona, Spain';
+  if(!localStorage.getItem('tm_product')){const t=TEMPLATES.lock;['product','moq','price','delivery','certs','advantage'].forEach(f=>localStorage.setItem('tm_'+f,t[f]));toast(t('toastDemoAuto'));}
+  else toast(t('toastDemo'));
+}
+
+function toast(msg){D.to.textContent=msg;D.to.classList.add('show');clearTimeout(D.to._tid);D.to._tid=setTimeout(()=>D.to.classList.remove('show'),2000);}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
